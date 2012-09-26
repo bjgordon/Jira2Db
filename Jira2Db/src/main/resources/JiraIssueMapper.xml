@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers">
+	<resultMap id="JiraIssueMap"
+		type="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
+		<id property="id" column="id" />
+		<result property="jiraId" column="jira_id" />
+		<result property="summary" column="summary" />
+	</resultMap>
+
+	<select id="getJiraIssueDto" parameterType="long" resultMap="JiraIssueMap">
+		select * from t_jira_issue where id = #{id}
+	</select>
+
+	<select id="getAllJiraIssueDto" resultMap="JiraIssueMap">
+		select * from
+		t_jira_issue
+	</select>
+
+	<insert id="createJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto"
+		keyProperty="id" useGeneratedKeys="true">
+		insert into
+		t_jira_issue (jira_id,
+		summary, create_date)
+		values
+		(#{jiraId},#{summary}, current_timestamp)
+	</insert>
+
+	<update id="updateJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
+		update
+		t_jira_issue set summary = #{summary}, update_date = current_timestamp
+		where id = #{id}
+	</update>
+</mapper>
+

@@ -48,8 +48,8 @@ public class App {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		// testJira();
-		testJdbc();
+		testJira();
+		// testJdbc();
 		// testJpa();
 		testMybatis();
 
@@ -71,8 +71,7 @@ public class App {
 
 	public static void testJira() throws Exception {
 		JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
-		// URI jiraServerUri = new URI("http://rohan:8080");
-		URI jiraServerUri = new URI("http://localhost:2990/jira");
+		URI jiraServerUri = new URI(PropertiesWrapper.get("jira.server.uri"));
 		JiraRestClient restClient = factory.create(jiraServerUri,
 				new BasicHttpAuthenticationHandler("admin", "admin"));
 

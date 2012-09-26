@@ -32,10 +32,10 @@ import com.gordcorp.jira2db.util.PropertiesWrapper;
 
 public class SqlSessionFactorySingleton {
 
-	final static Logger logger = LoggerFactory
+	protected final static Logger logger = LoggerFactory
 			.getLogger(SqlSessionFactorySingleton.class);
 
-	static SqlSessionFactory sqlSessionFactory = null;
+	protected static SqlSessionFactory sqlSessionFactory = null;
 
 	protected static final String MYBATIS_CONFIG_FILENAME = "mybatis-config.xml";
 
@@ -51,7 +51,6 @@ public class SqlSessionFactorySingleton {
 			sqlSessionFactory = null;
 			logger.error("Problem during init: " + e.getMessage(), e);
 		}
-
 	}
 
 	public static SqlSessionFactory instance() {
@@ -61,5 +60,5 @@ public class SqlSessionFactorySingleton {
 		}
 		return sqlSessionFactory;
 	}
-
+	
 }
