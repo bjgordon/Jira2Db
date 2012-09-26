@@ -22,9 +22,10 @@ public abstract class MyBatisDao<T> implements GenericDao<T> {
 	protected final static Logger logger = LoggerFactory
 			.getLogger(MyBatisDao.class);
 
-	private static final String NAMESPACE = "mappers";
-	private final SqlSessionFactory sf; // reference to mybatis session factory
-	private final Class<T> type;
+	protected static final String NAMESPACE = "mappers";
+	protected final SqlSessionFactory sf; // reference to mybatis session
+											// factory
+	protected final Class<T> type;
 
 	/**
 	 * Define prefixes for easier naming conventions between XML mapper files

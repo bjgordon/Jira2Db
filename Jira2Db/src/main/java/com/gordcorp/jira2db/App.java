@@ -53,6 +53,8 @@ public class App {
 		// testJpa();
 		testMybatis();
 
+		Jira jira = new Jira();
+
 	}
 
 	private static void testMybatis() {
