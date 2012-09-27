@@ -13,14 +13,14 @@ public class JiraIssueDao extends MyBatisDao<JiraIssueDto> {
 
 	}
 
-	public JiraIssueDto getByJiraId(String jiraId) throws PersistenceException {
+	public JiraIssueDto getByKey(String key) throws PersistenceException {
 
 		SqlSession session = sf.openSession();
 		JiraIssueDto obj = null;
 		try {
 			String query = NAMESPACE + "." + PREFIX_SELECT_QUERY
-					+ this.type.getSimpleName() + "ByJiraId";
-			obj = (JiraIssueDto) session.selectOne(query, jiraId);
+					+ this.type.getSimpleName() + "ByKey";
+			obj = (JiraIssueDto) session.selectOne(query, key);
 		} finally {
 			session.close();
 		}

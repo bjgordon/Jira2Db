@@ -16,11 +16,11 @@ import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactor
 import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
+import com.gordcorp.jira2db.util.JiraTransformer;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
-import com.gordcorp.jira2db.util.Transformer;
 
 public class Jira {
-	protected final static Logger logger = LoggerFactory.getLogger(Jira.class);
+	protected final static Logger log = LoggerFactory.getLogger(Jira.class);
 
 	JerseyJiraRestClientFactory factory = null;
 	JiraRestClient restClient = null;
@@ -38,34 +38,37 @@ public class Jira {
 
 	}
 
-	protected void syncProject(BasicProject basicProject) {
+	protected void syncProject(String projectName) {
 
 		NullProgressMonitor pm = new NullProgressMonitor();
-		SearchResult searchResult = restClient.getSearchClient().searchJql(
-				"project = \"" + basicProject.getName() + "\"", pm);
-		for (BasicIssue issueResult : searchResult.getIssues()) {
+		String jql = "project = \"" + projectName + "\"";
 
-			issueResult.getKey();
-			Issue issue = restClient.getIssueClient().getIssue(
-					issueResult.getKey(), pm);
-			JiraIssueDao jiraIssueDao = new JiraIssueDao(JiraIssueDto.class,
-					SqlSessionFactorySingleton.instance());
+		int ISSUES_PER_SEARCH = 50;
+		int issues = 0;
+		SearchResult searchResult = null;
+		do {
+			searchResult = restClient.getSearchClient().searchJql(jql,
+					ISSUES_PER_SEARCH, issues, pm);
+			for (BasicIssue issueResult : searchResult.getIssues()) {
+				issues++;
+				log.info("issue " + issueResult.getKey());
 
-			JiraIssueDto newJiraIssueDto = Transformer.toJiraIssueDto(issue);
-			if (jiraIssueDao.create(newJiraIssueDto) != 1) {
-				throw new RuntimeException("Problem inserting "
-						+ newJiraIssueDto);
+				Issue issue = restClient.getIssueClient().getIssue(
+						issueResult.getKey(), pm);
+				JiraIssueDao jiraIssueDao = new JiraIssueDao(
+						JiraIssueDto.class,
+						SqlSessionFactorySingleton.instance());
+
+				JiraIssueDto newJiraIssueDto = JiraTransformer
+						.toJiraIssueDto(issue);
+				if (jiraIssueDao.create(newJiraIssueDto) != 1) {
+					throw new RuntimeException("Problem inserting "
+							+ newJiraIssueDto);
+				}
+
 			}
-		}
-	}
+		} while (issues < searchResult.getTotal());
 
-	public void verifySync() {
-		NullProgressMonitor pm = new NullProgressMonitor();
-		Iterable<BasicProject> projects = restClient.getProjectClient()
-				.getAllProjects(pm);
-		for (BasicProject basicProject : projects) {
-			syncProject(basicProject);
-		}
 	}
 
 	public void doSync() {
@@ -73,7 +76,8 @@ public class Jira {
 		Iterable<BasicProject> projects = restClient.getProjectClient()
 				.getAllProjects(pm);
 		for (BasicProject basicProject : projects) {
-			syncProject(basicProject);
+			log.info("project=" + basicProject.getName());
+			syncProject(basicProject.getName());
 		}
 
 	}

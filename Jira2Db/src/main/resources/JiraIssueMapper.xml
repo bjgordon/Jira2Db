@@ -6,12 +6,25 @@
 	<resultMap id="JiraIssueMap"
 		type="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
 		<id property="id" column="id" />
-		<result property="jiraId" column="jira_id" />
+		<result property="assignee" column="assignee" />
+		<result property="creationDate" column="creation_date" />
+		<result property="description" column="description" />
+		<result property="jiraUri" column="jira_uri" />
+		<result property="key" column="key" />
+		<result property="priority" column="priority" />
+		<result property="project" column="project" />
+		<result property="reporter" column="reporter" />
 		<result property="summary" column="summary" />
+		<result property="updateDate" column="update_date" />
 	</resultMap>
 
 	<select id="getJiraIssueDto" parameterType="long" resultMap="JiraIssueMap">
 		select * from t_jira_issue where id = #{id}
+	</select>
+
+	<select id="getJiraIssueDtoByKey" parameterType="String"
+		resultMap="JiraIssueMap">
+		select * from t_jira_issue where key = #{key}
 	</select>
 
 	<select id="getAllJiraIssueDto" resultMap="JiraIssueMap">
@@ -22,16 +35,31 @@
 	<insert id="createJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto"
 		keyProperty="id" useGeneratedKeys="true">
 		insert into
-		t_jira_issue (jira_id,
-		summary, create_date)
+		t_jira_issue
+		(assignee,creation_date,description,jira_uri,key,priority,project,reporter,summary,update_date)
 		values
-		(#{jiraId},#{summary}, current_timestamp)
+		(#{assignee},#{creationDate},#{description},#{jiraUri},#{key},#{priority},#{project},#{reporter},#{summary},#{updateDate})
 	</insert>
 
 	<update id="updateJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
+
 		update
-		t_jira_issue set summary = #{summary}, update_date = current_timestamp
+		t_jira_issue set
+		assignee = #{assignee}
+		,creation_date = #{creationDate}
+		,description =
+		#{description}
+		,jira_uri = #{jiraUri}
+		,key = #{key}
+		,priority =
+		#{priority}
+		,project = #{project}
+		,reporter = #{reporter}
+		,summary =
+		#{summary}
+		, update_date = #{updateDate}
 		where id = #{id}
+
 	</update>
 </mapper>
 

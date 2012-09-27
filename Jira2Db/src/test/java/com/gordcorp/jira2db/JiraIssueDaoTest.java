@@ -35,7 +35,7 @@ public class JiraIssueDaoTest {
 		try {
 			Connection connection = session.getConnection();
 			Statement stmt = connection.createStatement();
-			stmt.executeUpdate("delete from T_JIRA_ISSUE where JIRA_ID like 'TEST-%'");
+			stmt.executeUpdate("delete from T_JIRA_ISSUE where key like 'TEST-%'");
 			session.commit();
 		} finally {
 			session.close();
@@ -60,7 +60,7 @@ public class JiraIssueDaoTest {
 
 	public static JiraIssueDto getTestJiraIssueDto() {
 		JiraIssueDto dto = new JiraIssueDto();
-		dto.setJiraId("TEST-1");
+		dto.setKey("TEST-1");
 		dto.setSummary("TEST SUMMARY");
 		return dto;
 	}
@@ -74,7 +74,7 @@ public class JiraIssueDaoTest {
 	@Test
 	public void testCreate_TestIssue_ReturnsId() {
 		JiraIssueDto dto = new JiraIssueDto();
-		dto.setJiraId("TEST-1");
+		dto.setKey("TEST-1");
 		dto.setSummary("TEST SUMMARY");
 		assertTrue(jiraIssueDao.create(dto) == 1);
 
@@ -82,7 +82,7 @@ public class JiraIssueDaoTest {
 		JiraIssueDto readDto = jiraIssueDao.get(dto.getId());
 		assertNotNull(readDto);
 		assertEquals(dto.getId(), readDto.getId());
-		assertEquals(dto.getJiraId(), readDto.getJiraId());
+		assertEquals(dto.getKey(), readDto.getKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
 	}
 
@@ -98,7 +98,7 @@ public class JiraIssueDaoTest {
 		JiraIssueDto readDto = jiraIssueDao.get(dto.getId());
 		assertNotNull(readDto);
 		assertEquals(dto.getId(), readDto.getId());
-		assertEquals(dto.getJiraId(), readDto.getJiraId());
+		assertEquals(dto.getKey(), readDto.getKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
 	}
 
