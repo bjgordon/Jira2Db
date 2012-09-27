@@ -40,26 +40,35 @@
 		values
 		(#{assignee},#{creationDate},#{description},#{jiraUri},#{key},#{priority},#{project},#{reporter},#{summary},#{updateDate})
 	</insert>
-
+	
+	<!-- @formatter:off -->
 	<update id="updateJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
-
 		update
 		t_jira_issue set
-		assignee = #{assignee}
-		,creation_date = #{creationDate}
-		,description =
-		#{description}
-		,jira_uri = #{jiraUri}
-		,key = #{key}
-		,priority =
-		#{priority}
-		,project = #{project}
-		,reporter = #{reporter}
-		,summary =
-		#{summary}
-		, update_date = #{updateDate}
+			assignee = #{assignee}
+			,creation_date = #{creationDate}
+			,description = #{description}
+			,jira_uri = #{jiraUri}
+			,key = #{key}
+			,priority =	#{priority}
+			,project = #{project}
+			,reporter =	#{reporter}
+			,summary = #{summary}
+			,update_date = #{updateDate}
 		where id = #{id}
 
 	</update>
+	<!-- @formatter:on -->
+	
+	<delete id="deleteJiraIssueDto" parameterType="long">
+		delete
+		t_jira_issue where id = #{id}
+	</delete>
+
+	<delete id="deleteJiraIssueDtoByKey" parameterType="String">
+		delete from
+		t_jira_issue where key like #{value}
+	</delete>
+
 </mapper>
 
