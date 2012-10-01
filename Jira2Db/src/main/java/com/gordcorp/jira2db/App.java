@@ -32,6 +32,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.atlassian.jira.rest.client.JiraRestClient;
+import com.atlassian.jira.rest.client.NullProgressMonitor;
 import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
@@ -85,11 +87,22 @@ public class App {
 				return;
 			}
 
-			// Overwrite the properties file with cmdline args
+			// Overwrite the properties file with command line arguments
 			if (line.hasOption("D")) {
 				String[] values = line.getOptionValues("D");
+				for (int i = 0; i < values.length; i = i + 2) {
+					String key = values[i];
+					// If user does not provide a value for this property, use
+					// an empty string
+					String value = "";
+					if (i + 1 < values.length) {
+						value = values[i + 1];
+					}
 
-				PropertiesWrapper.set(values[0], values[1]);
+					log.info("Setting key=" + key + " value=" + value);
+					PropertiesWrapper.set(key, value);
+				}
+
 			}
 
 			if (line.hasOption("test-jira")) {
@@ -108,7 +121,7 @@ public class App {
 
 		} catch (ParseException exp) {
 
-			log.error("Parsing failed.  Reason: " + exp.getMessage());
+			log.error("Parsing failed: " + exp.getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -127,15 +140,19 @@ public class App {
 		try {
 			JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
 			URI jiraServerUri = new URI(uri);
-			factory.create(
+			JiraRestClient jiraRestClient = factory.create(
 					jiraServerUri,
 					new BasicHttpAuthenticationHandler(PropertiesWrapper
 							.get("jira.username"), PropertiesWrapper
 							.get("jira.password")));
 
+			// Test the connection by retrieving list of all projects
+			jiraRestClient.getProjectClient().getAllProjects(
+					new NullProgressMonitor());
+
 			System.out.println("Successfully connected to Jira");
 		} catch (Exception e) {
-			System.out.println("Could not connect to jira: " + e);
+			System.out.println("Could not connect to jira: " + e.getMessage());
 		}
 	}
 }
