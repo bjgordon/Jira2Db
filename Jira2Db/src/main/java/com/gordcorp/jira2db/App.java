@@ -25,9 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.atlassian.jira.rest.client.JiraRestClient;
-import com.atlassian.jira.rest.client.NullProgressMonitor;
 import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
-import com.atlassian.jira.rest.client.domain.Issue;
 import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
 
@@ -39,25 +37,30 @@ public class App {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		testJira();
+		testConnectionToJira();
 		// testJdbc();
 		// testJpa();
 		// testMybatis();
 
-		Jira jira = new Jira();
+		// Jira jira = new Jira();
 
 	}
 
-	public static void testJira() throws Exception {
-		JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
-		URI jiraServerUri = new URI(PropertiesWrapper.get("jira.server.uri"));
-		JiraRestClient restClient = factory.create(jiraServerUri,
-				new BasicHttpAuthenticationHandler("admin", "admin"));
+	public static void testConnectionToJira() throws Exception {
+		try {
+			JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
+			URI jiraServerUri = new URI(
+					PropertiesWrapper.get("jira.server.uri"));
+			JiraRestClient restClient = factory.create(
+					jiraServerUri,
+					new BasicHttpAuthenticationHandler(PropertiesWrapper
+							.get("jira.username"), PropertiesWrapper
+							.get("jira.password")));
 
-		final NullProgressMonitor pm = new NullProgressMonitor();
-		final Issue issue = restClient.getIssueClient().getIssue("TP-1", pm);
-
-		System.out.println(issue);
+			System.out.println("Successfully connected to jira: "
+					+ jiraServerUri);
+		} catch (Exception e) {
+			System.out.println("Problem connecting to jira: " + e);
+		}
 	}
-
 }
