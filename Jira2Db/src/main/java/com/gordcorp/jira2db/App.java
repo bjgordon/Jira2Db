@@ -32,7 +32,6 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.atlassian.jira.rest.client.JiraRestClient;
 import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
@@ -45,60 +44,98 @@ public class App {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		Option help = new Option("help", "print this message");
+
+		@SuppressWarnings("static-access")
+		Option allProjects = OptionBuilder.withLongOpt("all-projects")
+				.withDescription("Sync all Jira projects").create();
+
+		Option help = new Option("h", "help", false, "print this message");
+
+		@SuppressWarnings("static-access")
+		Option project = OptionBuilder.withLongOpt("project")
+				.withDescription("Only sync Jira project PROJECT").hasArg()
+				.withArgName("PROJECT").create();
 
 		@SuppressWarnings("static-access")
 		Option property = OptionBuilder.withArgName("property=value")
 				.hasArgs(2).withValueSeparator()
 				.withDescription("use value for given property").create("D");
 
+		@SuppressWarnings("static-access")
+		Option testJira = OptionBuilder
+				.withLongOpt("test-jira")
+				.withDescription(
+						"Test the connection to Jira and print the results")
+				.create();
+
 		Options options = new Options();
+		options.addOption(allProjects);
 		options.addOption(help);
+		options.addOption(project);
 		options.addOption(property);
+		options.addOption(testJira);
 
 		CommandLineParser parser = new GnuParser();
 		try {
-			// parse the command line arguments
+
 			CommandLine line = parser.parse(options, args);
+
+			if (line.hasOption(help.getOpt())) {
+				printHelp(options);
+				return;
+			}
+
+			// Overwrite the properties file with cmdline args
 			if (line.hasOption("D")) {
 				String[] values = line.getOptionValues("D");
+
 				PropertiesWrapper.set(values[0], values[1]);
 			}
 
-			if (line.hasOption("help")) {
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("java -jar jira2db", options);
+			if (line.hasOption("test-jira")) {
+				testJira();
+			} else {
+				if (line.hasOption("project")) {
+					Jira jira = new Jira();
+					jira.syncProject(line.getOptionValue("project"));
+				} else if (line.hasOption("all-projects")) {
+					Jira jira = new Jira();
+					jira.doSync();
+				} else {
+					printHelp(options);
+				}
 			}
 
 		} catch (ParseException exp) {
 
 			log.error("Parsing failed.  Reason: " + exp.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
-
-		testConnectionToJira();
-		// testJdbc();
-		// testJpa();
-		// testMybatis();
-
-		// Jira jira = new Jira();
 
 	}
 
-	public static void testConnectionToJira() throws Exception {
+	private static void printHelp(Options options) {
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp("java -jar jira2db", options);
+	}
+
+	public static void testJira() throws Exception {
+		String uri = PropertiesWrapper.get("jira.server.uri");
+		System.out.println("Testing connection to Jira at " + uri);
+
 		try {
 			JerseyJiraRestClientFactory factory = new JerseyJiraRestClientFactory();
-			URI jiraServerUri = new URI(
-					PropertiesWrapper.get("jira.server.uri"));
-			JiraRestClient restClient = factory.create(
+			URI jiraServerUri = new URI(uri);
+			factory.create(
 					jiraServerUri,
 					new BasicHttpAuthenticationHandler(PropertiesWrapper
 							.get("jira.username"), PropertiesWrapper
 							.get("jira.password")));
 
-			System.out.println("Successfully connected to jira: "
-					+ jiraServerUri);
+			System.out.println("Successfully connected to Jira");
 		} catch (Exception e) {
-			System.out.println("Problem connecting to jira: " + e);
+			System.out.println("Could not connect to jira: " + e);
 		}
 	}
 }

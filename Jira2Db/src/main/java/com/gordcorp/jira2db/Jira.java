@@ -59,6 +59,8 @@ public class Jira {
 
 	protected void syncProject(String projectName) {
 
+		log.info("Syncing project " + projectName);
+
 		NullProgressMonitor pm = new NullProgressMonitor();
 		String jql = "project = \"" + projectName + "\"";
 
@@ -102,6 +104,8 @@ public class Jira {
 	}
 
 	public void doSync() {
+		log.info("Syncing all");
+
 		NullProgressMonitor pm = new NullProgressMonitor();
 		Iterable<BasicProject> projects = restClient.getProjectClient()
 				.getAllProjects(pm);
