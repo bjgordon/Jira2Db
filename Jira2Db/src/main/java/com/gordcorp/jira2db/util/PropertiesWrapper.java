@@ -61,7 +61,7 @@ public class PropertiesWrapper {
 		if (properties.containsKey(key)) {
 			log.info("Overwritting property" + key);
 		} else {
-			log.info("Set property " + key);
+			log.info("Setting property " + key);
 		}
 		properties.setProperty(key, value);
 

@@ -21,6 +21,14 @@ package com.gordcorp.jira2db;
 
 import java.net.URI;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,12 +39,42 @@ import com.gordcorp.jira2db.util.PropertiesWrapper;
 
 public class App {
 
-	final static Logger logger = LoggerFactory.getLogger(App.class);
+	final static Logger log = LoggerFactory.getLogger(App.class);
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
+		Option help = new Option("help", "print this message");
+
+		@SuppressWarnings("static-access")
+		Option property = OptionBuilder.withArgName("property=value")
+				.hasArgs(2).withValueSeparator()
+				.withDescription("use value for given property").create("D");
+
+		Options options = new Options();
+		options.addOption(help);
+		options.addOption(property);
+
+		CommandLineParser parser = new GnuParser();
+		try {
+			// parse the command line arguments
+			CommandLine line = parser.parse(options, args);
+			if (line.hasOption("D")) {
+				String[] values = line.getOptionValues("D");
+				PropertiesWrapper.set(values[0], values[1]);
+			}
+
+			if (line.hasOption("help")) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("java -jar jira2db", options);
+			}
+
+		} catch (ParseException exp) {
+
+			log.error("Parsing failed.  Reason: " + exp.getMessage());
+		}
+
 		testConnectionToJira();
 		// testJdbc();
 		// testJpa();
