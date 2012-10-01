@@ -16,6 +16,7 @@
  * 	You should have received a copy of the GNU General Public License
  * 	along with Jira2Db.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+
 package com.gordcorp.jira2db.util;
 
 import com.atlassian.jira.rest.client.domain.Issue;

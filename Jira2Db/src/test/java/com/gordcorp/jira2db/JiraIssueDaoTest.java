@@ -16,6 +16,7 @@
  * 	You should have received a copy of the GNU General Public License
  * 	along with Jira2Db.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+
 package com.gordcorp.jira2db;
 
 import static org.junit.Assert.*;
@@ -31,9 +32,9 @@ import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 
 public class JiraIssueDaoTest {
-	JiraIssueDao jiraIssueDao = null;
+	static JiraIssueDao jiraIssueDao = null;
 
-	public JiraIssueDaoTest() {
+	static {
 		try {
 			jiraIssueDao = new JiraIssueDao(JiraIssueDto.class,
 					SqlSessionFactorySingleton.instance());
@@ -42,6 +43,13 @@ public class JiraIssueDaoTest {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static JiraIssueDto getTestJiraIssueDto() {
+		JiraIssueDto dto = new JiraIssueDto();
+		dto.setKey("TEST-1");
+		dto.setSummary("TEST SUMMARY");
+		return dto;
 	}
 
 	protected void clearTestData() throws Exception {
@@ -72,9 +80,7 @@ public class JiraIssueDaoTest {
 
 	@Test
 	public void testCreate_TestIssue_ReturnsId() {
-		JiraIssueDto dto = new JiraIssueDto();
-		dto.setKey("TEST-1");
-		dto.setSummary("TEST SUMMARY");
+		JiraIssueDto dto = getTestJiraIssueDto();
 		assertTrue(jiraIssueDao.create(dto) == 1);
 
 		assertTrue(dto.getId() > 0);
@@ -87,7 +93,7 @@ public class JiraIssueDaoTest {
 
 	@Test
 	public void testUpdate_TestIssue_IsUpdated() {
-		JiraIssueDto dto = TestHelper.getTestJiraIssueDto();
+		JiraIssueDto dto = getTestJiraIssueDto();
 		assertTrue(jiraIssueDao.create(dto) == 1);
 
 		assertTrue(dto.getId() > 0);

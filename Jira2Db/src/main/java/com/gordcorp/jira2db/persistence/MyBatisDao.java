@@ -16,6 +16,7 @@
  * 	You should have received a copy of the GNU General Public License
  * 	along with Jira2Db.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+
 /*
  * From http://blog.idleworx.com/2011/09/mybatis-dao-example-code-tutorial.html
  */

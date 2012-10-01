@@ -16,6 +16,7 @@
  * 	You should have received a copy of the GNU General Public License
  * 	along with Jira2Db.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+
 package com.gordcorp.jira2db;
 
 import java.net.URI;
@@ -79,11 +80,22 @@ public class Jira {
 
 				JiraIssueDto newJiraIssueDto = JiraTransformer
 						.toJiraIssueDto(issue);
-				if (jiraIssueDao.create(newJiraIssueDto) != 1) {
-					throw new RuntimeException("Problem inserting "
-							+ newJiraIssueDto);
-				}
 
+				JiraIssueDto readJiraIssueDto = jiraIssueDao
+						.getByKey(newJiraIssueDto.getKey());
+				if (readJiraIssueDto == null) {
+					log.info("Creating " + issueResult.getKey());
+					if (jiraIssueDao.create(newJiraIssueDto) != 1) {
+						throw new RuntimeException("Problem inserting "
+								+ newJiraIssueDto);
+					}
+				} else {
+					log.info("Updating " + issueResult.getKey());
+					if (jiraIssueDao.update(newJiraIssueDto) != 1) {
+						throw new RuntimeException("Problem updating "
+								+ newJiraIssueDto);
+					}
+				}
 			}
 		} while (issues < searchResult.getTotal());
 
