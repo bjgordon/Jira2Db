@@ -28,8 +28,7 @@ import org.slf4j.LoggerFactory;
 
 public class PropertiesWrapper {
 
-	final static Logger logger = LoggerFactory
-			.getLogger(PropertiesWrapper.class);
+	final static Logger log = LoggerFactory.getLogger(PropertiesWrapper.class);
 
 	static Properties properties = null;
 
@@ -39,12 +38,31 @@ public class PropertiesWrapper {
 		try {
 			properties = new Properties();
 			properties.load(new FileInputStream(CONFIG_FILENAME));
-			logger.info("Loaded " + properties.size() + " properties from "
+			log.info("Loaded " + properties.size() + " properties from "
 					+ CONFIG_FILENAME);
 		} catch (IOException e) {
 			properties = null;
-			logger.error("Problem during init: " + e.getMessage(), e);
+			log.error("Problem during init: " + e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * Override the properties read from the properties file, e.g. so properties
+	 * can be overwritten at runtime from command line.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public static void set(String key, String value) {
+		if (properties == null) {
+			throw new RuntimeException("Properties not intialised!");
+		}
+
+		if (properties.containsKey(key)) {
+			log.info("Overwritting " + key);
+		}
+		properties.setProperty(key, value);
+
 	}
 
 	public static Properties getProperties() {
@@ -61,6 +79,8 @@ public class PropertiesWrapper {
 		if (properties.containsKey(key)) {
 			return properties.getProperty(key);
 		} else {
+			log.info("Properties does not contain an entry for " + key
+					+ " - returning empty string");
 			return "";
 		}
 	}
