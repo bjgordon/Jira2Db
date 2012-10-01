@@ -19,17 +19,26 @@
 
 package com.gordcorp.jira2db.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-
-import com.gordcorp.jira2db.util.PropertiesWrapper;
 
 public class PropertiesWrapperTest {
 
 	@Test
 	public void testGetProperties_DoesNotReturnNull() {
 		assertNotNull(PropertiesWrapper.getProperties());
+	}
+
+	@Test
+	public void test_set_OverridesPropertyFile() {
+		final String TEST_KEY = "foo.key";
+		assertEquals(
+				"Properties file should not contain value for " + TEST_KEY, "",
+				PropertiesWrapper.get(TEST_KEY));
+		PropertiesWrapper.set(TEST_KEY, "bar.value");
+		assertEquals("bar.value", PropertiesWrapper.get(TEST_KEY));
 	}
 
 }
