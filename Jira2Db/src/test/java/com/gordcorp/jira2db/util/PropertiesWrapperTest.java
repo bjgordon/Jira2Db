@@ -17,7 +17,7 @@
  * 	along with Jira2Db.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package com.gordcorp.jira2db;
+package com.gordcorp.jira2db.util;
 
 import static org.junit.Assert.assertNotNull;
 
