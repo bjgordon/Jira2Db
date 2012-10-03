@@ -22,7 +22,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mappers">
 	<resultMap id="JiraIssueMap"
-		type="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
+		type="jiraIssueDto">
 		<id property="id" column="id" />
 		<result property="assignee" column="assignee" />
 		<result property="creationDate" column="creation_date" />
@@ -50,7 +50,7 @@
 		t_jira_issue
 	</select>
 
-	<insert id="createJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto"
+	<insert id="createJiraIssueDto" parameterType="jiraIssueDto"
 		keyProperty="id" useGeneratedKeys="true">
 		insert into
 		t_jira_issue
@@ -60,7 +60,7 @@
 	</insert>
 	
 	<!-- @formatter:off -->
-	<update id="updateJiraIssueDto" parameterType="com.gordcorp.jira2db.persistence.dto.JiraIssueDto">
+	<update id="updateJiraIssueDto" parameterType="jiraIssueDto">
 		update
 		t_jira_issue set
 			assignee = #{assignee}
