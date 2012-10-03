@@ -128,9 +128,9 @@ public class App {
 
 	}
 
-	private static void printHelp(Options options) {
+	private static void printHelp(Options options) throws Exception {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("java -jar jira2db", options);
+		formatter.printHelp("java -jar <jarfile>", options);
 	}
 
 	public static void testJira() throws Exception {
