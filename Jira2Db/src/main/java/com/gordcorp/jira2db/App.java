@@ -20,6 +20,7 @@
 package com.gordcorp.jira2db;
 
 import java.net.URI;
+import java.util.Arrays;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -109,10 +110,12 @@ public class App {
 				testJira();
 			} else {
 				if (line.hasOption("project")) {
-					Jira jira = new Jira();
-					jira.syncProject(line.getOptionValue("project"));
+					JiraSynchroniser jira = new JiraSynchroniser();
+					jira.setProjects(Arrays.asList(new String[] { line
+							.getOptionValue("project") }));
+					jira.doSync();
 				} else if (line.hasOption("all-projects")) {
-					Jira jira = new Jira();
+					JiraSynchroniser jira = new JiraSynchroniser();
 					jira.doSync();
 				} else {
 					printHelp(options);

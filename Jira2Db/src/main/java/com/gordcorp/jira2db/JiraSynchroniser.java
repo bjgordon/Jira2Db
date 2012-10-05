@@ -20,31 +20,33 @@
 package com.gordcorp.jira2db;
 
 import java.net.URI;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.atlassian.jira.rest.client.JiraRestClient;
-import com.atlassian.jira.rest.client.NullProgressMonitor;
 import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
-import com.atlassian.jira.rest.client.domain.BasicIssue;
-import com.atlassian.jira.rest.client.domain.BasicProject;
-import com.atlassian.jira.rest.client.domain.Issue;
-import com.atlassian.jira.rest.client.domain.SearchResult;
 import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
+import com.gordcorp.jira2db.jira.Jira;
 import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
-import com.gordcorp.jira2db.util.JiraTransformer;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
 
-public class Jira {
-	protected final static Logger log = LoggerFactory.getLogger(Jira.class);
+public class JiraSynchroniser {
+
+	protected final static Logger log = LoggerFactory
+			.getLogger(JiraSynchroniser.class);
 
 	JerseyJiraRestClientFactory factory = null;
 	JiraRestClient restClient = null;
 
-	public Jira() throws Exception {
+	List<String> projects = null;
+
+	Integer minutes = null;
+
+	public JiraSynchroniser() throws Exception {
 
 		this.factory = new JerseyJiraRestClientFactory();
 
@@ -57,62 +59,66 @@ public class Jira {
 
 	}
 
-	protected void syncProject(String projectName) {
-
-		log.info("Syncing project " + projectName);
-
-		NullProgressMonitor pm = new NullProgressMonitor();
-		String jql = "project = \"" + projectName + "\"";
-
-		int ISSUES_PER_SEARCH = 50;
-		int issues = 0;
-		SearchResult searchResult = null;
-		do {
-			searchResult = restClient.getSearchClient().searchJql(jql,
-					ISSUES_PER_SEARCH, issues, pm);
-			for (BasicIssue issueResult : searchResult.getIssues()) {
-				issues++;
-				log.info("issue " + issueResult.getKey());
-
-				Issue issue = restClient.getIssueClient().getIssue(
-						issueResult.getKey(), pm);
-				JiraIssueDao jiraIssueDao = new JiraIssueDao(
-						JiraIssueDto.class,
-						SqlSessionFactorySingleton.instance());
-
-				JiraIssueDto newJiraIssueDto = JiraTransformer
-						.toJiraIssueDto(issue);
-
-				JiraIssueDto readJiraIssueDto = jiraIssueDao
-						.getByKey(newJiraIssueDto.getKey());
-				if (readJiraIssueDto == null) {
-					log.info("Creating " + issueResult.getKey());
-					if (jiraIssueDao.create(newJiraIssueDto) != 1) {
-						throw new RuntimeException("Problem inserting "
-								+ newJiraIssueDto);
-					}
-				} else {
-					log.info("Updating " + issueResult.getKey());
-					if (jiraIssueDao.update(newJiraIssueDto) != 1) {
-						throw new RuntimeException("Problem updating "
-								+ newJiraIssueDto);
-					}
-				}
+	public void setProjects(List<String> projects) {
+		this.projects = projects;
+		List<String> allProjects = Jira.getAllProjects();
+		for (String project : projects) {
+			if (!allProjects.contains(project)) {
+				throw new RuntimeException("Project not found in Jira: "
+						+ project);
 			}
-		} while (issues < searchResult.getTotal());
+		}
+	}
 
+	public void setUpdatedWithinMinutes(Integer minutes) {
+		this.minutes = minutes;
 	}
 
 	public void doSync() {
 		log.info("Syncing all");
 
-		NullProgressMonitor pm = new NullProgressMonitor();
-		Iterable<BasicProject> projects = restClient.getProjectClient()
-				.getAllProjects(pm);
-		for (BasicProject basicProject : projects) {
-			log.info("project=" + basicProject.getName());
-			syncProject(basicProject.getName());
+		if (projects == null) {
+			log.info("Will sync all projects");
+			projects = Jira.getAllProjects();
+			log.info("Found " + projects.size() + " projects to sync");
+		} else {
+			log.info("Syncing these projects: " + projects);
 		}
 
+		JiraIssueDao jiraIssueDao = new JiraIssueDao(JiraIssueDto.class,
+				SqlSessionFactorySingleton.instance());
+
+		for (String projectName : projects) {
+			log.info("Syncing project " + projectName);
+			List<JiraIssueDto> dtos = null;
+			if (minutes == null) {
+				dtos = Jira.getAllIssuesInProject(projectName);
+			} else {
+				dtos = Jira.getIssuesUpdatedWithin(projectName, minutes);
+			}
+
+			log.info("Number of issues found: " + dtos.size());
+			for (JiraIssueDto jiraIssueDto : dtos) {
+				log.info("Checking if issue already exists: "
+						+ jiraIssueDto.getKey());
+				JiraIssueDto readJiraIssueDto = jiraIssueDao
+						.getByKey(jiraIssueDto.getKey());
+				if (readJiraIssueDto == null) {
+					log.info("Creating " + jiraIssueDto.getKey());
+					if (jiraIssueDao.create(jiraIssueDto) != 1) {
+						throw new RuntimeException("Problem inserting "
+								+ jiraIssueDto);
+					}
+				} else {
+					log.info("Updating " + jiraIssueDto.getKey());
+					if (jiraIssueDao.update(jiraIssueDto) != 1) {
+						throw new RuntimeException("Problem updating "
+								+ jiraIssueDto);
+					}
+				}
+			}
+			log.info("Finished syncing project " + projectName);
+		}
+		log.info("Finished syncing all projects");
 	}
 }
