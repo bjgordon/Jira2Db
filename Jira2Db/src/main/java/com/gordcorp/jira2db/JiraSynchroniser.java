@@ -19,43 +19,26 @@
 
 package com.gordcorp.jira2db;
 
-import java.net.URI;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.atlassian.jira.rest.client.JiraRestClient;
-import com.atlassian.jira.rest.client.auth.BasicHttpAuthenticationHandler;
-import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
 import com.gordcorp.jira2db.jira.Jira;
 import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
-import com.gordcorp.jira2db.util.PropertiesWrapper;
 
 public class JiraSynchroniser {
 
 	protected final static Logger log = LoggerFactory
 			.getLogger(JiraSynchroniser.class);
 
-	JerseyJiraRestClientFactory factory = null;
-	JiraRestClient restClient = null;
-
 	List<String> projects = null;
 
 	Integer minutes = null;
 
-	public JiraSynchroniser() throws Exception {
-
-		this.factory = new JerseyJiraRestClientFactory();
-
-		URI jiraServerUri = new URI(PropertiesWrapper.get("jira.server.uri"));
-		String username = PropertiesWrapper.get("jira.username");
-		String password = PropertiesWrapper.get("jira.password");
-
-		this.restClient = factory.create(jiraServerUri,
-				new BasicHttpAuthenticationHandler(username, password));
+	public JiraSynchroniser() {
 
 	}
 
