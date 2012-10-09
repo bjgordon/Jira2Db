@@ -49,11 +49,11 @@ public class Jira {
 	static {
 		try {
 
-			if (factory != null) {
+			if (factory == null) {
 				factory = new JerseyJiraRestClientFactory();
 			}
 
-			if (restClient != null) {
+			if (restClient == null) {
 				URI jiraServerUri = new URI(
 						PropertiesWrapper.get("jira.server.uri"));
 
@@ -114,8 +114,9 @@ public class Jira {
 
 	public static List<JiraIssueDto> getIssuesUpdatedWithin(String projectName,
 			int updatedWithinMinutes) {
+		String jql = "project = \"" + projectName + "\"";
 
-		String jql = "updated >= \"";
+		jql += " AND  updated >= \"";
 
 		jql += "-" + updatedWithinMinutes + "m";
 		jql += "\"";
