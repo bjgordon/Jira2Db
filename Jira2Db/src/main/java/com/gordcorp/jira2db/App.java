@@ -48,10 +48,6 @@ public class App {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		@SuppressWarnings("static-access")
-		Option allProjects = OptionBuilder.withLongOpt("all-projects")
-				.withDescription("Sync all Jira projects").create();
-
 		Option help = new Option("h", "help", false, "print this message");
 
 		@SuppressWarnings("static-access")
@@ -71,12 +67,19 @@ public class App {
 						"Test the connection to Jira and print the results")
 				.create();
 
+		@SuppressWarnings("static-access")
+		Option forever = OptionBuilder
+				.withLongOpt("forever")
+				.withDescription(
+						"Will continue polling Jira and syncing forever")
+				.create();
+
 		Options options = new Options();
-		options.addOption(allProjects);
 		options.addOption(help);
 		options.addOption(project);
 		options.addOption(property);
 		options.addOption(testJira);
+		options.addOption(forever);
 
 		CommandLineParser parser = new GnuParser();
 		try {
@@ -109,26 +112,26 @@ public class App {
 			if (line.hasOption("test-jira")) {
 				testJira();
 			} else {
+				JiraSynchroniser jira = new JiraSynchroniser();
+
 				if (line.hasOption("project")) {
-					JiraSynchroniser jira = new JiraSynchroniser();
+
 					jira.setProjects(Arrays.asList(new String[] { line
 							.getOptionValue("project") }));
-					jira.doSync();
-				} else if (line.hasOption("all-projects")) {
-					JiraSynchroniser jira = new JiraSynchroniser();
-					jira.doSync();
-				} else {
-					printHelp(options);
+				}
+
+				jira.syncAll();
+
+				if (line.hasOption("forever")) {
+					jira.syncForever();
 				}
 			}
-
 		} catch (ParseException exp) {
 
 			log.error("Parsing failed: " + exp.getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-
 	}
 
 	private static void printHelp(Options options) throws Exception {
