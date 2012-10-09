@@ -3,9 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+
+
 	<typeAliases>
 		<package name="com.gordcorp.jira2db.persistence.dto" />
 	</typeAliases>
+
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />
@@ -17,6 +21,14 @@
 			</dataSource>
 		</environment>
 	</environments>
+
+	<databaseIdProvider type="VENDOR">
+		<property name="SQL Server" value="sqlserver" />
+		<property name="DB2" value="db2" />
+		<property name="Oracle" value="oracle" />
+	</databaseIdProvider>
+
+
 	<mappers>
 		<mapper resource="JiraIssueMapper.xml" />
 	</mappers>
