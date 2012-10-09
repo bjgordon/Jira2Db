@@ -49,20 +49,17 @@ public class Jira {
 	static {
 		try {
 
-			if (factory == null) {
-				factory = new JerseyJiraRestClientFactory();
-			}
+			factory = new JerseyJiraRestClientFactory();
 
-			if (restClient == null) {
-				URI jiraServerUri = new URI(
-						PropertiesWrapper.get("jira.server.uri"));
+			URI jiraServerUri = new URI(
+					PropertiesWrapper.get("jira.server.uri"));
 
-				String username = PropertiesWrapper.get("jira.username");
-				String password = PropertiesWrapper.get("jira.password");
+			String username = PropertiesWrapper.get("jira.username");
+			String password = PropertiesWrapper.get("jira.password");
 
-				restClient = factory.create(jiraServerUri,
-						new BasicHttpAuthenticationHandler(username, password));
-			}
+			restClient = factory.create(jiraServerUri,
+					new BasicHttpAuthenticationHandler(username, password));
+
 		} catch (URISyntaxException e) {
 			throw new RuntimeException("Problem initialising Jira interface: "
 					+ e.getMessage(), e);
