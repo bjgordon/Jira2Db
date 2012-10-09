@@ -98,6 +98,9 @@ public class JiraSynchroniser {
 
 		int minutesSinceLastSync = minutesSinceLastSync();
 
+		// Ensure the minutes to search Jira is at least 1 minute.
+		minutesSinceLastSync = Math.max(1, minutesSinceLastSync);
+
 		lastSyncDate = Calendar.getInstance().getTime();
 		for (String projectName : projectNames) {
 			List<JiraIssueDto> dtos = Jira.getIssuesUpdatedWithin(projectName,
