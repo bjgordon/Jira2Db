@@ -27,8 +27,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.gordcorp.jira2db.persistence.JiraIssueDao;
-import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 
 public class JiraIssueDaoTest {
@@ -103,6 +101,22 @@ public class JiraIssueDaoTest {
 		JiraIssueDto readDto = jiraIssueDao.get(dto.getId());
 		assertNotNull(readDto);
 		assertEquals(dto.getId(), readDto.getId());
+		assertEquals(dto.getKey(), readDto.getKey());
+		assertEquals(dto.getSummary(), readDto.getSummary());
+	}
+
+	@Test
+	public void testUpdateByKey_TestIssue_IsUpdated() {
+		JiraIssueDto dto = getTestJiraIssueDto();
+		assertTrue(jiraIssueDao.create(dto) == 1);
+
+		assertTrue(dto.getId() > 0);
+		dto.setId(null);
+		dto.setSummary("New Summary");
+		assertTrue(jiraIssueDao.updateByKey(dto) == 1);
+
+		JiraIssueDto readDto = jiraIssueDao.getByKey(dto.getKey());
+		assertNotNull(readDto);
 		assertEquals(dto.getKey(), readDto.getKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
 	}

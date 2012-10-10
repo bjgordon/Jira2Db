@@ -122,4 +122,89 @@ public class JiraIssueDto extends GenericDto {
 		this.updateDate = updateDate;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((assignee == null) ? 0 : assignee.hashCode());
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((jiraUri == null) ? 0 : jiraUri.hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result
+				+ ((priority == null) ? 0 : priority.hashCode());
+		result = prime * result + ((project == null) ? 0 : project.hashCode());
+		result = prime * result
+				+ ((reporter == null) ? 0 : reporter.hashCode());
+		result = prime * result + ((summary == null) ? 0 : summary.hashCode());
+		result = prime * result
+				+ ((updateDate == null) ? 0 : updateDate.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JiraIssueDto other = (JiraIssueDto) obj;
+		if (assignee == null) {
+			if (other.assignee != null)
+				return false;
+		} else if (!assignee.equals(other.assignee))
+			return false;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (jiraUri == null) {
+			if (other.jiraUri != null)
+				return false;
+		} else if (!jiraUri.equals(other.jiraUri))
+			return false;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		if (priority == null) {
+			if (other.priority != null)
+				return false;
+		} else if (!priority.equals(other.priority))
+			return false;
+		if (project == null) {
+			if (other.project != null)
+				return false;
+		} else if (!project.equals(other.project))
+			return false;
+		if (reporter == null) {
+			if (other.reporter != null)
+				return false;
+		} else if (!reporter.equals(other.reporter))
+			return false;
+		if (summary == null) {
+			if (other.summary != null)
+				return false;
+		} else if (!summary.equals(other.summary))
+			return false;
+		if (updateDate == null) {
+			if (other.updateDate != null)
+				return false;
+		} else if (!updateDate.equals(other.updateDate))
+			return false;
+		return true;
+	}
+
 }
