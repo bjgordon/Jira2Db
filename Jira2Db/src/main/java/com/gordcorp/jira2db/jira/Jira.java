@@ -66,6 +66,11 @@ public class Jira {
 		}
 	}
 
+	/**
+	 * Get a list of all the project names in Jira
+	 * 
+	 * @return list of project names
+	 */
 	public static List<String> getAllProjects() {
 
 		Iterable<BasicProject> projects = restClient.getProjectClient()
@@ -77,6 +82,14 @@ public class Jira {
 		return results;
 	}
 
+	/**
+	 * Get list of issues matching the search query. The issues are returned as
+	 * JiraIssueDto objects.
+	 * 
+	 * @param jql
+	 *            search query given to Jira.
+	 * @return list of issues returned from Jira as JiraIssueDto objects
+	 */
 	protected static List<JiraIssueDto> getIssues(String jql) {
 		log.info("Getting issues from jira with jql " + jql);
 		List<JiraIssueDto> result = new ArrayList<JiraIssueDto>();
@@ -103,6 +116,12 @@ public class Jira {
 		return result;
 	}
 
+	/**
+	 * Return list of all Jira issues in the project.
+	 * 
+	 * @param projectName
+	 * @return
+	 */
 	public static List<JiraIssueDto> getAllIssuesInProject(String projectName) {
 
 		String jql = "project = \"" + projectName + "\"";
@@ -110,6 +129,14 @@ public class Jira {
 		return getIssues(jql);
 	}
 
+	/**
+	 * Return list of jira issues in the project updated within the last
+	 * updatedWithinMinutes minutes.
+	 * 
+	 * @param projectName
+	 * @param updatedWithinMinutes
+	 * @return
+	 */
 	public static List<JiraIssueDto> getIssuesUpdatedWithin(String projectName,
 			int updatedWithinMinutes) {
 		String jql = "project = \"" + projectName + "\"";
