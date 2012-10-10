@@ -60,4 +60,18 @@ public class JiraIssueDao extends MyBatisDao<JiraIssueDto> {
 		return status;
 	}
 
+	public int updateByKey(JiraIssueDto jiraIssueDto) {
+		SqlSession session = sf.openSession();
+		int status = 0;
+		try {
+			String query = NAMESPACE + "." + PREFIX_UPDATE_QUERY
+					+ this.type.getSimpleName() + "ByKey";
+			status = session.update(query, jiraIssueDto);
+			session.commit();
+		} finally {
+			session.close();
+		}
+		return status;
+	}
+
 }

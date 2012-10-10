@@ -63,8 +63,26 @@
 		,summary = #{summary}
 		,update_date = #{updateDate}
 		where id = #{id}
+	</update>
+	
+	<update id="updateJiraIssueDtoByKey" parameterType="jiraIssueDto">
+		update
+		t_jira_issue set
+		assignee = #{assignee}
+		,creation_date = #{creationDate}
+		,description = #{description}
+		,jira_uri = #{jiraUri}
+		,priority =
+		#{priority}
+		,project = #{project}
+		,reporter = #{reporter}
+		,summary =
+		#{summary}
+		,update_date = #{updateDate}
+		where key = #{key}
 
 	</update>
+
 
 	<delete id="deleteJiraIssueDto" parameterType="long">
 		delete
