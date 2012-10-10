@@ -78,6 +78,7 @@ public class Jira {
 	}
 
 	protected static List<JiraIssueDto> getIssues(String jql) {
+		log.info("Getting issues from jira with jql " + jql);
 		List<JiraIssueDto> result = new ArrayList<JiraIssueDto>();
 		int ISSUES_PER_SEARCH = 50;
 		int issues = 0;
