@@ -39,8 +39,6 @@ public class JiraSynchroniser {
 
 	List<String> projectNames = null;
 
-	Integer minutes = null;
-
 	Date lastSyncDate = null;
 
 	JiraIssueDao jiraIssueDao = null;
@@ -58,7 +56,7 @@ public class JiraSynchroniser {
 	 * @param projectsNames
 	 */
 	public void setProjects(List<String> projectsNames) {
-		this.projectNames = projectsNames;
+
 		List<String> allProjects = Jira.getAllProjects();
 		for (String project : projectsNames) {
 			if (!allProjects.contains(project)) {
@@ -66,6 +64,8 @@ public class JiraSynchroniser {
 						+ project);
 			}
 		}
+
+		this.projectNames = projectsNames;
 	}
 
 	/**
@@ -80,13 +80,22 @@ public class JiraSynchroniser {
 				.getKey());
 		if (readJiraIssueDto == null) {
 			log.info("Creating " + jiraIssueDto.getKey());
-			if (jiraIssueDao.create(jiraIssueDto) != 1) {
+			int rows = jiraIssueDao.create(jiraIssueDto);
+			log.info("Create returned " + rows);
+			if (rows != 1) {
 				throw new RuntimeException("Problem inserting " + jiraIssueDto);
 			}
 		} else {
-			log.info("Updating " + jiraIssueDto.getKey());
-			if (jiraIssueDao.update(jiraIssueDto) != 1) {
-				throw new RuntimeException("Problem updating " + jiraIssueDto);
+			if (readJiraIssueDto.equals(jiraIssueDto)) {
+				log.info("Updated issue from Jira matches the database, so skipping update");
+			} else {
+				log.info("Updating " + jiraIssueDto.getKey());
+				int rows = jiraIssueDao.updateByKey(jiraIssueDto);
+				log.info("Update returned " + rows);
+				if (rows != 1) {
+					throw new RuntimeException("Problem updating "
+							+ jiraIssueDto);
+				}
 			}
 		}
 	}
@@ -164,13 +173,13 @@ public class JiraSynchroniser {
 		}
 
 		log.info("Jira will be polled every " + pollRateInMillis / 1000
-				+ "seconds");
+				+ " seconds");
 
 		if (projectNames == null) {
 			projectNames = Jira.getAllProjects();
 		}
 
-		log.info("Forever syncing projects " + projectNames);
+		log.info("Forever syncing projects: " + projectNames);
 
 		try {
 			while (true) {
