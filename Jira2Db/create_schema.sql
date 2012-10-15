@@ -1,4 +1,4 @@
-﻿
+
 drop table T_JIRA_ISSUE cascade;
 drop sequence t_jira_issue_id_seq;
 
@@ -9,7 +9,7 @@ create table T_JIRA_ISSUE (
 	,CREATION_DATE TIMESTAMP
 	,DESCRIPTION TEXT
 	,JIRA_URI TEXT
-	,KEY TEXT
+	,JIRA_KEY TEXT
 	,PRIORITY TEXT
 	,PROJECT TEXT
 	,REPORTER TEXT

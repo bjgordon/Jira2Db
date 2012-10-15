@@ -45,7 +45,7 @@ public class JiraIssueDaoTest {
 
 	public static JiraIssueDto getTestJiraIssueDto() {
 		JiraIssueDto dto = new JiraIssueDto();
-		dto.setKey("TEST-1");
+		dto.setJiraKey("TEST-1");
 		dto.setSummary("TEST SUMMARY");
 		return dto;
 	}
@@ -85,7 +85,7 @@ public class JiraIssueDaoTest {
 		JiraIssueDto readDto = jiraIssueDao.get(dto.getId());
 		assertNotNull(readDto);
 		assertEquals(dto.getId(), readDto.getId());
-		assertEquals(dto.getKey(), readDto.getKey());
+		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
 	}
 
@@ -101,7 +101,7 @@ public class JiraIssueDaoTest {
 		JiraIssueDto readDto = jiraIssueDao.get(dto.getId());
 		assertNotNull(readDto);
 		assertEquals(dto.getId(), readDto.getId());
-		assertEquals(dto.getKey(), readDto.getKey());
+		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
 	}
 
@@ -115,9 +115,9 @@ public class JiraIssueDaoTest {
 		dto.setSummary("New Summary");
 		assertTrue(jiraIssueDao.updateByKey(dto) == 1);
 
-		JiraIssueDto readDto = jiraIssueDao.getByKey(dto.getKey());
+		JiraIssueDto readDto = jiraIssueDao.getByKey(dto.getJiraKey());
 		assertNotNull(readDto);
-		assertEquals(dto.getKey(), readDto.getKey());
+		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
 	}
 

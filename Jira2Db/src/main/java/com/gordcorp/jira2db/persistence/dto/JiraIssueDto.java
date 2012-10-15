@@ -27,7 +27,7 @@ public class JiraIssueDto extends GenericDto {
 	Date creationDate;
 	String description;
 	String jiraUri;
-	String key;
+	String jiraKey;
 	String priority;
 	String project;
 	String reporter;
@@ -74,12 +74,12 @@ public class JiraIssueDto extends GenericDto {
 		this.jiraUri = jiraUri;
 	}
 
-	public String getKey() {
-		return key;
+	public String getJiraKey() {
+		return jiraKey;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setJiraKey(String jiraKey) {
+		this.jiraKey = jiraKey;
 	}
 
 	public String getPriority() {
@@ -133,7 +133,7 @@ public class JiraIssueDto extends GenericDto {
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((jiraUri == null) ? 0 : jiraUri.hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((jiraKey == null) ? 0 : jiraKey.hashCode());
 		result = prime * result
 				+ ((priority == null) ? 0 : priority.hashCode());
 		result = prime * result + ((project == null) ? 0 : project.hashCode());
@@ -174,10 +174,10 @@ public class JiraIssueDto extends GenericDto {
 				return false;
 		} else if (!jiraUri.equals(other.jiraUri))
 			return false;
-		if (key == null) {
-			if (other.key != null)
+		if (jiraKey == null) {
+			if (other.jiraKey != null)
 				return false;
-		} else if (!key.equals(other.key))
+		} else if (!jiraKey.equals(other.jiraKey))
 			return false;
 		if (priority == null) {
 			if (other.priority != null)

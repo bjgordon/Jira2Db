@@ -38,7 +38,7 @@ public class JiraTransformer {
 			dto.setJiraUri(issue.getSelf().getPath());
 		}
 
-		dto.setKey(issue.getKey());
+		dto.setJiraKey(issue.getKey());
 
 		if (issue.getPriority() != null) {
 			dto.setPriority(issue.getPriority().getName());

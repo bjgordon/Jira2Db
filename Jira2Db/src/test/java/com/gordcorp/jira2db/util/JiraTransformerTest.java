@@ -36,7 +36,7 @@ public class JiraTransformerTest {
 				null, null, null, null, null, null);
 
 		JiraIssueDto dto = JiraTransformer.toJiraIssueDto(issue);
-		assertEquals(issue.getKey(), dto.getKey());
+		assertEquals(issue.getKey(), dto.getJiraKey());
 		assertEquals(issue.getSummary(), dto.getSummary());
 		assertEquals(issue.getTransitionsUri(), dto.getJiraUri());
 
