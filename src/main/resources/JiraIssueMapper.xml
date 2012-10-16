@@ -18,10 +18,11 @@
 		<result property="creationDate" column="creation_date" />
 		<result property="description" column="description" />
 		<result property="jiraUri" column="jira_uri" />
-		<result property="key" column="key" />
+		<result property="jiraKey" column="jira_key" />
 		<result property="priority" column="priority" />
 		<result property="project" column="project" />
 		<result property="reporter" column="reporter" />
+		<result property="status" column="status" />
 		<result property="summary" column="summary" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
@@ -30,9 +31,9 @@
 		select * from t_jira_issue where id = #{id}
 	</select>
 
-	<select id="getJiraIssueDtoByKey" parameterType="String"
+	<select id="getJiraIssueDtoByJiraKey" parameterType="String"
 		resultMap="JiraIssueMap">
-		select * from t_jira_issue where key = #{key}
+		select * from t_jira_issue where jira_key = #{jiraKey}
 	</select>
 
 	<select id="getAllJiraIssueDto" resultMap="JiraIssueMap">
@@ -44,9 +45,9 @@
 		keyProperty="id" useGeneratedKeys="true">
 		insert into
 		t_jira_issue
-		(assignee,creation_date,description,jira_uri,key,priority,project,reporter,summary,update_date)
+		(assignee,creation_date,description,jira_uri,jira_key,priority,project,reporter,status,summary,update_date)
 		values
-		(#{assignee},#{creationDate},#{description},#{jiraUri},#{key},#{priority},#{project},#{reporter},#{summary},#{updateDate})
+		(#{assignee},#{creationDate},#{description},#{jiraUri},#{jiraKey},#{priority},#{project},#{reporter},#{status},#{summary},#{updateDate})
 	</insert>
 
 	<update id="updateJiraIssueDto" parameterType="jiraIssueDto">
@@ -56,16 +57,17 @@
 		,creation_date = #{creationDate}
 		,description = #{description}
 		,jira_uri = #{jiraUri}
-		,key = #{key}
+		,jira_key = #{jiraKey}
 		,priority = #{priority}
 		,project = #{project}
 		,reporter = #{reporter}
+		,status = #{status}
 		,summary = #{summary}
 		,update_date = #{updateDate}
 		where id = #{id}
 	</update>
 	
-	<update id="updateJiraIssueDtoByKey" parameterType="jiraIssueDto">
+	<update id="updateJiraIssueDtoByJiraKey" parameterType="jiraIssueDto">
 		update
 		t_jira_issue set
 		assignee = #{assignee}
@@ -76,10 +78,12 @@
 		#{priority}
 		,project = #{project}
 		,reporter = #{reporter}
+		,status =
+		#{status}
 		,summary =
 		#{summary}
 		,update_date = #{updateDate}
-		where key = #{key}
+		where jira_key = #{jiraKey}
 
 	</update>
 
@@ -89,9 +93,9 @@
 		t_jira_issue where id = #{id}
 	</delete>
 
-	<delete id="deleteJiraIssueDtoByKey" parameterType="String">
+	<delete id="deleteJiraIssueDtoByJiraKey" parameterType="String">
 		delete from
-		t_jira_issue where key like #{value}
+		t_jira_issue where jira_key like #{value}
 	</delete>
 
 </mapper>

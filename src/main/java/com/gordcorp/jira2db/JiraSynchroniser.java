@@ -76,7 +76,7 @@ public class JiraSynchroniser {
 	 */
 	protected void updateOrCreateIssue(JiraIssueDto jiraIssueDto) {
 		log.info("Checking if issue already exists: " + jiraIssueDto.getJiraKey());
-		JiraIssueDto readJiraIssueDto = jiraIssueDao.getByKey(jiraIssueDto
+		JiraIssueDto readJiraIssueDto = jiraIssueDao.getByJiraKey(jiraIssueDto
 				.getJiraKey());
 		if (readJiraIssueDto == null) {
 			log.info("Creating " + jiraIssueDto.getJiraKey());
@@ -90,7 +90,7 @@ public class JiraSynchroniser {
 				log.info("Updated issue from Jira matches the database, so skipping update");
 			} else {
 				log.info("Updating " + jiraIssueDto.getJiraKey());
-				int rows = jiraIssueDao.updateByKey(jiraIssueDto);
+				int rows = jiraIssueDao.updateByJiraKey(jiraIssueDto);
 				log.info("Update returned " + rows);
 				if (rows != 1) {
 					throw new RuntimeException("Problem updating "

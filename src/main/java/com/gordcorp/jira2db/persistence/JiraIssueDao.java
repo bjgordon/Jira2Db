@@ -32,13 +32,13 @@ public class JiraIssueDao extends MyBatisDao<JiraIssueDto> {
 
 	}
 
-	public JiraIssueDto getByKey(String key) throws PersistenceException {
+	public JiraIssueDto getByJiraKey(String key) throws PersistenceException {
 
 		SqlSession session = sf.openSession();
 		JiraIssueDto obj = null;
 		try {
 			String query = NAMESPACE + "." + PREFIX_SELECT_QUERY
-					+ this.type.getSimpleName() + "ByKey";
+					+ this.type.getSimpleName() + "ByJiraKey";
 			obj = (JiraIssueDto) session.selectOne(query, key);
 		} finally {
 			session.close();
@@ -46,13 +46,13 @@ public class JiraIssueDao extends MyBatisDao<JiraIssueDto> {
 		return obj;
 	}
 
-	public int deleteByKey(String key) throws PersistenceException {
+	public int deleteByJiraKey(String jiraKey) throws PersistenceException {
 		SqlSession session = sf.openSession();
 		int status = 0;
 		try {
 			String query = NAMESPACE + "." + PREFIX_DELETE_QUERY
-					+ this.type.getSimpleName() + "ByKey";
-			status = session.delete(query, key);
+					+ this.type.getSimpleName() + "ByJiraKey";
+			status = session.delete(query, jiraKey);
 			session.commit();
 		} finally {
 			session.close();
@@ -60,12 +60,12 @@ public class JiraIssueDao extends MyBatisDao<JiraIssueDto> {
 		return status;
 	}
 
-	public int updateByKey(JiraIssueDto jiraIssueDto) {
+	public int updateByJiraKey(JiraIssueDto jiraIssueDto) {
 		SqlSession session = sf.openSession();
 		int status = 0;
 		try {
 			String query = NAMESPACE + "." + PREFIX_UPDATE_QUERY
-					+ this.type.getSimpleName() + "ByKey";
+					+ this.type.getSimpleName() + "ByJiraKey";
 			status = session.update(query, jiraIssueDto);
 			session.commit();
 		} finally {

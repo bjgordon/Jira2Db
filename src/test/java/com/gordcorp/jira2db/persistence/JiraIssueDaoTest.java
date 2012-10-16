@@ -51,7 +51,7 @@ public class JiraIssueDaoTest {
 	}
 
 	protected void clearTestData() throws Exception {
-		jiraIssueDao.deleteByKey("TEST-%");
+		jiraIssueDao.deleteByJiraKey("TEST-%");
 	}
 
 	@Before
@@ -113,9 +113,9 @@ public class JiraIssueDaoTest {
 		assertTrue(dto.getId() > 0);
 		dto.setId(null);
 		dto.setSummary("New Summary");
-		assertTrue(jiraIssueDao.updateByKey(dto) == 1);
+		assertTrue(jiraIssueDao.updateByJiraKey(dto) == 1);
 
-		JiraIssueDto readDto = jiraIssueDao.getByKey(dto.getJiraKey());
+		JiraIssueDto readDto = jiraIssueDao.getByJiraKey(dto.getJiraKey());
 		assertNotNull(readDto);
 		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());

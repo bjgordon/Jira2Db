@@ -1,4 +1,4 @@
-
+﻿
 drop table T_JIRA_ISSUE cascade;
 drop sequence t_jira_issue_id_seq;
 
@@ -13,8 +13,9 @@ create table T_JIRA_ISSUE (
 	,PRIORITY TEXT
 	,PROJECT TEXT
 	,REPORTER TEXT
+	,STATUS TEXT
 	,SUMMARY TEXT
 	,UPDATE_DATE TIMESTAMP
 );
 
-CREATE UNIQUE INDEX key ON T_JIRA_ISSUE (KEY);
+CREATE UNIQUE INDEX key ON T_JIRA_ISSUE (JIRA_KEY);
