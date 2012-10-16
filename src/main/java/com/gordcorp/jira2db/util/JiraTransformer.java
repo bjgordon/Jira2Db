@@ -52,6 +52,10 @@ public class JiraTransformer {
 			dto.setReporter(issue.getReporter().getName());
 		}
 
+		if (issue.getStatus() != null) {
+			dto.setStatus(issue.getStatus().getName());
+		}
+
 		dto.setSummary(issue.getSummary());
 
 		if (issue.getUpdateDate() != null) {

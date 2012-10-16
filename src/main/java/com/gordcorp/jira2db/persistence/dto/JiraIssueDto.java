@@ -31,6 +31,7 @@ public class JiraIssueDto extends GenericDto {
 	String priority;
 	String project;
 	String reporter;
+	String status;
 	String summary;
 	Date updateDate;
 
@@ -106,6 +107,14 @@ public class JiraIssueDto extends GenericDto {
 		this.reporter = reporter;
 	}
 
+	public String getStatus() {
+		return summary;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getSummary() {
 		return summary;
 	}
@@ -132,13 +141,15 @@ public class JiraIssueDto extends GenericDto {
 				+ ((creationDate == null) ? 0 : creationDate.hashCode());
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((jiraUri == null) ? 0 : jiraUri.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((jiraKey == null) ? 0 : jiraKey.hashCode());
+		result = prime * result + ((jiraUri == null) ? 0 : jiraUri.hashCode());
 		result = prime * result
 				+ ((priority == null) ? 0 : priority.hashCode());
 		result = prime * result + ((project == null) ? 0 : project.hashCode());
 		result = prime * result
 				+ ((reporter == null) ? 0 : reporter.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((summary == null) ? 0 : summary.hashCode());
 		result = prime * result
 				+ ((updateDate == null) ? 0 : updateDate.hashCode());
@@ -169,15 +180,20 @@ public class JiraIssueDto extends GenericDto {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (jiraUri == null) {
-			if (other.jiraUri != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!jiraUri.equals(other.jiraUri))
+		} else if (!id.equals(other.id))
 			return false;
 		if (jiraKey == null) {
 			if (other.jiraKey != null)
 				return false;
 		} else if (!jiraKey.equals(other.jiraKey))
+			return false;
+		if (jiraUri == null) {
+			if (other.jiraUri != null)
+				return false;
+		} else if (!jiraUri.equals(other.jiraUri))
 			return false;
 		if (priority == null) {
 			if (other.priority != null)
@@ -193,6 +209,11 @@ public class JiraIssueDto extends GenericDto {
 			if (other.reporter != null)
 				return false;
 		} else if (!reporter.equals(other.reporter))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
 			return false;
 		if (summary == null) {
 			if (other.summary != null)
