@@ -25,6 +25,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GenericDto {
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 
 	@Override
 	public String toString() {
