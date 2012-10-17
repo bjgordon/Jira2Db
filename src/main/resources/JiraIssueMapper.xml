@@ -54,7 +54,8 @@
 		update
 		t_jira_issue set
 		assignee = #{assignee}
-		,creation_date = #{creationDate}
+		,creation_date =
+		#{creationDate}
 		,description = #{description}
 		,jira_uri = #{jiraUri}
 		,jira_key = #{jiraKey}
@@ -63,7 +64,8 @@
 		,reporter = #{reporter}
 		,status = #{status}
 		,summary = #{summary}
-		,update_date = #{updateDate}
+		,update_date =
+		#{updateDate}
 		where id = #{id}
 	</update>
 	
@@ -71,7 +73,8 @@
 		update
 		t_jira_issue set
 		assignee = #{assignee}
-		,creation_date = #{creationDate}
+		,creation_date =
+		#{creationDate}
 		,description = #{description}
 		,jira_uri = #{jiraUri}
 		,priority =
@@ -84,7 +87,6 @@
 		#{summary}
 		,update_date = #{updateDate}
 		where jira_key = #{jiraKey}
-
 	</update>
 
 

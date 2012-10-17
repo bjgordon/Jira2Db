@@ -22,43 +22,54 @@ package com.gordcorp.jira2db.util;
 import com.atlassian.jira.rest.client.domain.Issue;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 
-public class JiraTransformer {
-	public static JiraIssueDto toJiraIssueDto(Issue issue) {
+public class JiraTransformer
+{
+
+	public static JiraIssueDto toJiraIssueDto(Issue issue)
+	{
 		JiraIssueDto dto = new JiraIssueDto();
-		if (issue.getAssignee() != null) {
+		if (issue.getAssignee() != null)
+		{
 			dto.setAssignee(issue.getAssignee().getName());
 		}
-		if (issue.getCreationDate() != null) {
+		if (issue.getCreationDate() != null)
+		{
 			dto.setCreationDate(issue.getCreationDate().toDate());
 		}
 
 		dto.setDescription(issue.getDescription());
 
-		if (issue.getSelf() != null) {
+		if (issue.getSelf() != null)
+		{
 			dto.setJiraUri(issue.getSelf().getPath());
 		}
 
 		dto.setJiraKey(issue.getKey());
 
-		if (issue.getPriority() != null) {
+		if (issue.getPriority() != null)
+		{
 			dto.setPriority(issue.getPriority().getName());
 		}
 
-		if (issue.getProject() != null) {
+		if (issue.getProject() != null)
+		{
 			dto.setProject(issue.getProject().getName());
 		}
 
-		if (issue.getReporter() != null) {
+		if (issue.getReporter() != null)
+		{
 			dto.setReporter(issue.getReporter().getName());
 		}
 
-		if (issue.getStatus() != null) {
+		if (issue.getStatus() != null)
+		{
 			dto.setStatus(issue.getStatus().getName());
 		}
-
+		
 		dto.setSummary(issue.getSummary());
 
-		if (issue.getUpdateDate() != null) {
+		if (issue.getUpdateDate() != null)
+		{
 			dto.setUpdateDate(issue.getUpdateDate().toDate());
 		}
 
