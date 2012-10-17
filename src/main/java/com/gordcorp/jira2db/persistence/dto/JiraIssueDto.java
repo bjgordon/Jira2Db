@@ -129,7 +129,7 @@ public class JiraIssueDto extends GenericDto
 
 	public String getStatus()
 	{
-		return summary;
+		return status;
 	}
 
 	public void setStatus(String status)

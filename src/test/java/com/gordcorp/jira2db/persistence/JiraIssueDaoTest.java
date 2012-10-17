@@ -47,6 +47,7 @@ public class JiraIssueDaoTest {
 		JiraIssueDto dto = new JiraIssueDto();
 		dto.setJiraKey("TEST-1");
 		dto.setSummary("TEST SUMMARY");
+		dto.setStatus("OPEN");
 		return dto;
 	}
 
@@ -87,6 +88,7 @@ public class JiraIssueDaoTest {
 		assertEquals(dto.getId(), readDto.getId());
 		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
+		assertEquals(dto.getStatus(), readDto.getStatus());
 	}
 
 	@Test
@@ -103,6 +105,7 @@ public class JiraIssueDaoTest {
 		assertEquals(dto.getId(), readDto.getId());
 		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
+		assertEquals(dto.getStatus(), readDto.getStatus());
 	}
 
 	@Test
@@ -119,6 +122,7 @@ public class JiraIssueDaoTest {
 		assertNotNull(readDto);
 		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
 		assertEquals(dto.getSummary(), readDto.getSummary());
+		assertEquals(dto.getStatus(), readDto.getStatus());
 	}
 
 }
