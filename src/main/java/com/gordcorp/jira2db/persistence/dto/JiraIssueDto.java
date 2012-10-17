@@ -21,7 +21,8 @@ package com.gordcorp.jira2db.persistence.dto;
 
 import java.util.Date;
 
-public class JiraIssueDto extends GenericDto {
+public class JiraIssueDto extends GenericDto
+{
 	Integer id;
 	String assignee;
 	Date creationDate;
@@ -33,131 +34,150 @@ public class JiraIssueDto extends GenericDto {
 	String reporter;
 	String status;
 	String summary;
+
 	Date updateDate;
 
-	public Integer getId() {
+	public Integer getId()
+	{
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Integer id)
+	{
 		this.id = id;
 	}
 
-	public String getAssignee() {
+	public String getAssignee()
+	{
 		return assignee;
 	}
 
-	public void setAssignee(String assignee) {
+	public void setAssignee(String assignee)
+	{
 		this.assignee = assignee;
 	}
 
-	public Date getCreationDate() {
+	public Date getCreationDate()
+	{
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Date creationDate)
+	{
 		this.creationDate = creationDate;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(String description)
+	{
 		this.description = description;
 	}
 
-	public String getJiraUri() {
+	public String getJiraUri()
+	{
 		return jiraUri;
 	}
 
-	public void setJiraUri(String jiraUri) {
+	public void setJiraUri(String jiraUri)
+	{
 		this.jiraUri = jiraUri;
 	}
 
-	public String getJiraKey() {
+	public String getJiraKey()
+	{
 		return jiraKey;
 	}
 
-	public void setJiraKey(String jiraKey) {
+	public void setJiraKey(String jiraKey)
+	{
 		this.jiraKey = jiraKey;
 	}
 
-	public String getPriority() {
+	public String getPriority()
+	{
 		return priority;
 	}
 
-	public void setPriority(String priority) {
+	public void setPriority(String priority)
+	{
 		this.priority = priority;
 	}
 
-	public String getProject() {
+	public String getProject()
+	{
 		return project;
 	}
 
-	public void setProject(String project) {
+	public void setProject(String project)
+	{
 		this.project = project;
 	}
 
-	public String getReporter() {
+	public String getReporter()
+	{
 		return reporter;
 	}
 
-	public void setReporter(String reporter) {
+	public void setReporter(String reporter)
+	{
 		this.reporter = reporter;
 	}
 
-	public String getStatus() {
-		return summary;
+	public String getStatus()
+	{
+		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(String status)
+	{
 		this.status = status;
 	}
 
-	public String getSummary() {
+	public String getSummary()
+	{
 		return summary;
 	}
 
-	public void setSummary(String summary) {
+	public void setSummary(String summary)
+	{
 		this.summary = summary;
 	}
 
-	public Date getUpdateDate() {
+	public Date getUpdateDate()
+	{
 		return updateDate;
 	}
 
-	public void setUpdateDate(Date updateDate) {
+	public void setUpdateDate(Date updateDate)
+	{
 		this.updateDate = updateDate;
 	}
 
-	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((assignee == null) ? 0 : assignee.hashCode());
-		result = prime * result
-				+ ((creationDate == null) ? 0 : creationDate.hashCode());
-		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((assignee == null) ? 0 : assignee.hashCode());
+		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((jiraKey == null) ? 0 : jiraKey.hashCode());
 		result = prime * result + ((jiraUri == null) ? 0 : jiraUri.hashCode());
-		result = prime * result
-				+ ((priority == null) ? 0 : priority.hashCode());
+		result = prime * result + ((priority == null) ? 0 : priority.hashCode());
 		result = prime * result + ((project == null) ? 0 : project.hashCode());
-		result = prime * result
-				+ ((reporter == null) ? 0 : reporter.hashCode());
+		result = prime * result + ((reporter == null) ? 0 : reporter.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((summary == null) ? 0 : summary.hashCode());
-		result = prime * result
-				+ ((updateDate == null) ? 0 : updateDate.hashCode());
+		result = prime * result + ((updateDate == null) ? 0 : updateDate.hashCode());
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -165,65 +185,96 @@ public class JiraIssueDto extends GenericDto {
 		if (getClass() != obj.getClass())
 			return false;
 		JiraIssueDto other = (JiraIssueDto) obj;
-		if (assignee == null) {
+		if (assignee == null)
+		{
 			if (other.assignee != null)
 				return false;
-		} else if (!assignee.equals(other.assignee))
+		}
+		else if (!assignee.equals(other.assignee))
 			return false;
-		if (creationDate == null) {
+		if (creationDate == null)
+		{
 			if (other.creationDate != null)
 				return false;
-		} else if (!creationDate.equals(other.creationDate))
+		}
+		else if (!creationDate.equals(other.creationDate))
 			return false;
-		if (description == null) {
+		if (description == null)
+		{
 			if (other.description != null)
 				return false;
-		} else if (!description.equals(other.description))
+		}
+		else if (!description.equals(other.description))
 			return false;
-		if (id == null) {
+		if (id == null)
+		{
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		}
+		else if (!id.equals(other.id))
 			return false;
-		if (jiraKey == null) {
+		if (jiraKey == null)
+		{
 			if (other.jiraKey != null)
 				return false;
-		} else if (!jiraKey.equals(other.jiraKey))
+		}
+		else if (!jiraKey.equals(other.jiraKey))
 			return false;
-		if (jiraUri == null) {
+		if (jiraUri == null)
+		{
 			if (other.jiraUri != null)
 				return false;
-		} else if (!jiraUri.equals(other.jiraUri))
+		}
+		else if (!id.equals(other.id))
 			return false;
-		if (priority == null) {
+		if (priority == null)
+		{
 			if (other.priority != null)
 				return false;
-		} else if (!priority.equals(other.priority))
+		}
+		else if (!priority.equals(other.priority))
 			return false;
-		if (project == null) {
+		if (project == null)
+		{
 			if (other.project != null)
 				return false;
-		} else if (!project.equals(other.project))
+		}
+		else if (!project.equals(other.project))
 			return false;
-		if (reporter == null) {
+		if (reporter == null)
+		{
 			if (other.reporter != null)
 				return false;
-		} else if (!reporter.equals(other.reporter))
+		}
+		else if (!reporter.equals(other.reporter))
 			return false;
-		if (status == null) {
+		if (status == null)
+		{
 			if (other.status != null)
 				return false;
-		} else if (!status.equals(other.status))
+		}
+		else if (!status.equals(other.status))
 			return false;
-		if (summary == null) {
+		if (status == null)
+		{
+			if (other.status != null)
+				return false;
+		}
+		else if (!status.equals(other.status))
+			return false;
+		if (summary == null)
+		{
 			if (other.summary != null)
 				return false;
-		} else if (!summary.equals(other.summary))
+		}
+		else if (!summary.equals(other.summary))
 			return false;
-		if (updateDate == null) {
+		if (updateDate == null)
+		{
 			if (other.updateDate != null)
 				return false;
-		} else if (!updateDate.equals(other.updateDate))
+		}
+		else if (!updateDate.equals(other.updateDate))
 			return false;
 		return true;
 	}
