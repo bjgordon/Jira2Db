@@ -35,6 +35,7 @@ import com.atlassian.jira.rest.client.domain.BasicProject;
 import com.atlassian.jira.rest.client.domain.Issue;
 import com.atlassian.jira.rest.client.domain.SearchResult;
 import com.atlassian.jira.rest.client.internal.jersey.JerseyJiraRestClientFactory;
+import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 import com.gordcorp.jira2db.util.JiraTransformer;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
@@ -109,6 +110,8 @@ public class Jira {
 
 				JiraIssueDto newJiraIssueDto = JiraTransformer
 						.toJiraIssueDto(issue);
+				List<JiraCustomFieldDto> customFields = JiraTransformer
+						.toJiraCustomFieldDtos(issue.getFields());
 				result.add(newJiraIssueDto);
 			}
 		} while (issues < searchResult.getTotal());

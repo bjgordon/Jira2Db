@@ -19,60 +19,86 @@
 
 package com.gordcorp.jira2db.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.atlassian.jira.rest.client.domain.Field;
 import com.atlassian.jira.rest.client.domain.Issue;
+import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 
-public class JiraTransformer
-{
+public class JiraTransformer {
 
-	public static JiraIssueDto toJiraIssueDto(Issue issue)
-	{
+	public static JiraIssueDto toJiraIssueDto(Issue issue,
+			Iterable<Field> fields) {
 		JiraIssueDto dto = new JiraIssueDto();
-		if (issue.getAssignee() != null)
-		{
+		if (issue.getAssignee() != null) {
 			dto.setAssignee(issue.getAssignee().getName());
 		}
-		if (issue.getCreationDate() != null)
-		{
+		if (issue.getCreationDate() != null) {
 			dto.setCreationDate(issue.getCreationDate().toDate());
 		}
 
 		dto.setDescription(issue.getDescription());
 
-		if (issue.getSelf() != null)
-		{
+		if (issue.getSelf() != null) {
 			dto.setJiraUri(issue.getSelf().getPath());
 		}
 
 		dto.setJiraKey(issue.getKey());
 
-		if (issue.getPriority() != null)
-		{
+		if (issue.getPriority() != null) {
 			dto.setPriority(issue.getPriority().getName());
 		}
 
-		if (issue.getProject() != null)
-		{
+		if (issue.getProject() != null) {
 			dto.setProject(issue.getProject().getName());
 		}
 
-		if (issue.getReporter() != null)
-		{
+		if (issue.getReporter() != null) {
 			dto.setReporter(issue.getReporter().getName());
 		}
 
-		if (issue.getStatus() != null)
-		{
+		if (issue.getStatus() != null) {
 			dto.setStatus(issue.getStatus().getName());
 		}
-		
+
 		dto.setSummary(issue.getSummary());
 
-		if (issue.getUpdateDate() != null)
-		{
+		if (issue.getUpdateDate() != null) {
 			dto.setUpdateDate(issue.getUpdateDate().toDate());
 		}
+		
+		
+		for (Field field : fields) {
+			JiraCustomFieldDto dto = new JiraCustomFieldDto());
+			dto.setIssueId(111); //todo
+			dto.setName(field.getName());
+			dto.setType(field.getType());
+			//todo maybe need to convert field.getValue to a string value better than this?
+			dto.setValue(field.getValue().toString());
+			dtos.add(dto);
+		}
+		
 
 		return dto;
+	}
+
+	public static List<JiraCustomFieldDto> toJiraCustomFieldDtos(
+			Iterable<Field> fields) {
+		
+		List<JiraCustomFieldDto> dtos = new ArrayList<JiraCustomFieldDto>();
+		
+		for (Field field : fields) {
+			JiraCustomFieldDto dto = new JiraCustomFieldDto());
+			dto.setIssueId(111); //todo
+			dto.setName(field.getName());
+			dto.setType(field.getType());
+			//todo maybe need to convert field.getValue to a string value better than this?
+			dto.setValue(field.getValue().toString());
+			dtos.add(dto);
+		}
+		
+		return dtos;
 	}
 }
