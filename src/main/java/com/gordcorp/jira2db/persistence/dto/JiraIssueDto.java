@@ -126,6 +126,22 @@ public class JiraIssueDto extends GenericDto {
 		this.status = status;
 	}
 
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -228,22 +244,6 @@ public class JiraIssueDto extends GenericDto {
 		} else if (!updateDate.equals(other.updateDate))
 			return false;
 		return true;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public Date getUpdateDate() {
-		return updateDate;
-	}
-
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
 	}
 
 }
