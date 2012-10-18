@@ -1,4 +1,4 @@
-﻿
+﻿drop table T_JIRA_CUSTOM_FIELD cascade;
 drop table T_JIRA_ISSUE cascade;
 drop sequence t_jira_issue_id_seq;
 
@@ -18,4 +18,18 @@ create table T_JIRA_ISSUE (
 	,UPDATE_DATE TIMESTAMP
 );
 
-CREATE UNIQUE INDEX key ON T_JIRA_ISSUE (JIRA_KEY);
+
+CREATE UNIQUE INDEX T_JIRA_ISSUE_key ON T_JIRA_ISSUE (JIRA_KEY);
+
+create table T_JIRA_CUSTOM_FIELD (
+	ID TEXT
+	,JIRA_KEY TEXT
+	,NAME TEXT
+	,TYPE TEXT
+	,VALUE TEXT
+);
+
+
+CREATE UNIQUE INDEX T_JIRA_CUSTOM_FIELD_key ON T_JIRA_CUSTOM_FIELD (JIRA_KEY,ID);
+
+
