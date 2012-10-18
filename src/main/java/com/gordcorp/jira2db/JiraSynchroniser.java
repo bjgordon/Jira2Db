@@ -31,6 +31,7 @@ import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
+import com.sun.jersey.api.client.ClientHandlerException;
 
 public class JiraSynchroniser {
 
@@ -75,7 +76,8 @@ public class JiraSynchroniser {
 	 * @param jiraIssueDto
 	 */
 	protected void updateOrCreateIssue(JiraIssueDto jiraIssueDto) {
-		log.info("Checking if issue already exists: " + jiraIssueDto.getJiraKey());
+		log.info("Checking if issue already exists: "
+				+ jiraIssueDto.getJiraKey());
 		JiraIssueDto readJiraIssueDto = jiraIssueDao.getByJiraKey(jiraIssueDto
 				.getJiraKey());
 		if (readJiraIssueDto == null) {
@@ -183,8 +185,13 @@ public class JiraSynchroniser {
 
 		try {
 			while (true) {
-
-				syncIssuesUpdatedSinceLastSync();
+				try {
+					syncIssuesUpdatedSinceLastSync();
+				} catch (ClientHandlerException e) {
+					log.error(
+							"Jira problem syncing, will continue and try again: "
+									+ e.getMessage(), e);
+				}
 
 				Thread.sleep(pollRateInMillis);
 			}
