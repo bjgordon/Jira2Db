@@ -21,8 +21,6 @@ package com.gordcorp.jira2db.persistence.dto;
 
 public class JiraCustomFieldDto extends GenericDto {
 
-	private static final long serialVersionUID = 2898156073530420987L;
-
 	String jiraKey;
 	String id;
 	String name;
