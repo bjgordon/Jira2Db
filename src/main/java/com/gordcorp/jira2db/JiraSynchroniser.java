@@ -26,12 +26,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.atlassian.jira.rest.client.RestClientException;
 import com.gordcorp.jira2db.jira.Jira;
 import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
-import com.sun.jersey.api.client.ClientHandlerException;
 
 public class JiraSynchroniser {
 
@@ -187,7 +187,7 @@ public class JiraSynchroniser {
 			while (true) {
 				try {
 					syncIssuesUpdatedSinceLastSync();
-				} catch (ClientHandlerException e) {
+				} catch (RestClientException e) {
 					log.error(
 							"Jira problem syncing, will continue and try again: "
 									+ e.getMessage(), e);
