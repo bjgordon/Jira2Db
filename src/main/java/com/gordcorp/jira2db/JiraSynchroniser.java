@@ -26,7 +26,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.atlassian.jira.rest.client.RestClientException;
 import com.gordcorp.jira2db.jira.Jira;
 import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
@@ -222,19 +221,45 @@ public class JiraSynchroniser {
 			projectNames = Jira.getAllProjects();
 		}
 
-		log.info("Forever syncing projects: " + projectNames);
+		boolean continueOnException = (PropertiesWrapper
+				.get("continue-on-exception").equalsIgnoreCase("1"));
 
 		try {
+
+			// If continueOnException is true, we keep trying until the sync
+			// finishes without error
+			while (true) {
+				try {
+					syncAll();
+					break;
+				} catch (Exception e) {
+					if (continueOnException) {
+						log.error(
+								"Problem syncing, continuing: "
+										+ e.getMessage(), e);
+					} else {
+						throw new RuntimeException(e);
+					}
+				}
+				Thread.sleep(pollRateInMillis);
+			}
+
+			log.info("Forever syncing projects: " + projectNames);
+
 			while (true) {
 				try {
 					syncIssuesUpdatedSinceLastSync();
 					if (includeDeletions) {
 						syncDeletions();
 					}
-				} catch (RestClientException e) {
-					log.error(
-							"Jira problem syncing, will continue and try again: "
-									+ e.getMessage(), e);
+				} catch (Exception e) {
+					if (continueOnException) {
+						log.error(
+								"Problem syncing, continuing: "
+										+ e.getMessage(), e);
+					} else {
+						throw new RuntimeException(e);
+					}
 				}
 
 				Thread.sleep(pollRateInMillis);
