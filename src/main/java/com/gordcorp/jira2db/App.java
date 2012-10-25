@@ -123,10 +123,10 @@ public class App {
 							.getOptionValue("project") }));
 				}
 
-				jira.syncAll();
-
 				if (line.hasOption("forever")) {
 					jira.syncForever();
+				} else {
+					jira.syncAll();
 				}
 			}
 		} catch (ParseException exp) {
