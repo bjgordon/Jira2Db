@@ -40,6 +40,8 @@ public class JiraSynchroniser {
 
 	List<String> projectNames = null;
 
+	boolean includeDeletions = false;
+
 	Date lastSyncDate = null;
 
 	JiraIssueDao jiraIssueDao = null;
@@ -47,6 +49,8 @@ public class JiraSynchroniser {
 	public JiraSynchroniser() {
 		this.jiraIssueDao = new JiraIssueDao(JiraIssueDto.class,
 				SqlSessionFactorySingleton.instance());
+		this.includeDeletions = PropertiesWrapper.get("jira.sync-deletions")
+				.equals("1");
 	}
 
 	/**
@@ -103,6 +107,41 @@ public class JiraSynchroniser {
 	}
 
 	/**
+	 * Get list of issues from Jira and the DB. Delete those that are not in
+	 * Jira but are in the DB.
+	 */
+	protected void syncDeletions(String projectName,
+			List<JiraIssueDto> issuesInJira) {
+
+		// todo limit getAll by projectName
+
+		List<JiraIssueDto> issuesInDb = jiraIssueDao.getAll();
+		for (JiraIssueDto issueInDb : issuesInDb) {
+			if (issueInDb.getProject().equalsIgnoreCase(projectName)
+					&& !issuesInJira.contains(issueInDb)) {
+				log.info("Found issue in DB that was not in Jira. Deleting from DB: "
+						+ issueInDb);
+
+				int rows = jiraIssueDao.deleteByJiraKey(issueInDb.getJiraKey());
+				log.info("Delete returned " + rows);
+				if (rows != 1) {
+					throw new RuntimeException("Problem deleting " + issueInDb);
+				}
+			}
+		}
+	}
+
+	protected void syncDeletions() {
+		log.info("Syncing deletions for projects " + projectNames);
+		for (String projectName : projectNames) {
+
+			List<JiraIssueDto> dtos = Jira.getAllIssuesInProject(projectName);
+			syncDeletions(projectName, dtos);
+		}
+
+	}
+
+	/**
 	 * Sync issues updated since the last sync occurred.
 	 */
 	protected void syncIssuesUpdatedSinceLastSync() {
@@ -150,12 +189,14 @@ public class JiraSynchroniser {
 		lastSyncDate = Calendar.getInstance().getTime();
 		for (String projectName : projectNames) {
 			log.info("Syncing project " + projectName);
-			List<JiraIssueDto> dtos = null;
-			dtos = Jira.getAllIssuesInProject(projectName);
+			List<JiraIssueDto> dtos = Jira.getAllIssuesInProject(projectName);
 
 			log.info("Number of issues found: " + dtos.size());
 			for (JiraIssueDto jiraIssueDto : dtos) {
 				updateOrCreateIssue(jiraIssueDto);
+			}
+			if (includeDeletions) {
+				syncDeletions(projectName, dtos);
 			}
 			log.info("Finished syncing project " + projectName);
 		}
@@ -187,6 +228,9 @@ public class JiraSynchroniser {
 			while (true) {
 				try {
 					syncIssuesUpdatedSinceLastSync();
+					if (includeDeletions) {
+						syncDeletions();
+					}
 				} catch (RestClientException e) {
 					log.error(
 							"Jira problem syncing, will continue and try again: "
