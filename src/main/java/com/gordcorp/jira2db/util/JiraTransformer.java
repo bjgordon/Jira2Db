@@ -20,7 +20,6 @@
 package com.gordcorp.jira2db.util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.atlassian.jira.rest.client.domain.Field;
 import com.atlassian.jira.rest.client.domain.Issue;
@@ -28,6 +27,10 @@ import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 
 public class JiraTransformer {
+
+	public static JiraIssueDto toJiraIssueDto(Issue issue) {
+		return toJiraIssueDto(issue, null);
+	}
 
 	public static JiraIssueDto toJiraIssueDto(Issue issue,
 			Iterable<Field> fields) {
@@ -68,37 +71,26 @@ public class JiraTransformer {
 		if (issue.getUpdateDate() != null) {
 			dto.setUpdateDate(issue.getUpdateDate().toDate());
 		}
-		
-		
-		for (Field field : fields) {
-			JiraCustomFieldDto dto = new JiraCustomFieldDto());
-			dto.setIssueId(111); //todo
-			dto.setName(field.getName());
-			dto.setType(field.getType());
-			//todo maybe need to convert field.getValue to a string value better than this?
-			dto.setValue(field.getValue().toString());
-			dtos.add(dto);
-		}
-		
 
+		dto.setCustomFields(new ArrayList<JiraCustomFieldDto>());
+
+		if (fields != null) {
+			for (Field field : fields) {
+				JiraCustomFieldDto jiraCustomFieldDto = new JiraCustomFieldDto();
+				jiraCustomFieldDto.setId(field.getId());
+				jiraCustomFieldDto.setName(field.getName());
+				jiraCustomFieldDto.setType(field.getType());
+				// todo maybe need to convert field.getValue to a string value
+				// better than this?
+				if (field.getValue() == null) {
+					jiraCustomFieldDto.setValue(null);
+				} else {
+					jiraCustomFieldDto.setValue(field.getValue().toString());
+				}
+				dto.getCustomFields().add(jiraCustomFieldDto);
+			}
+		}
 		return dto;
 	}
 
-	public static List<JiraCustomFieldDto> toJiraCustomFieldDtos(
-			Iterable<Field> fields) {
-		
-		List<JiraCustomFieldDto> dtos = new ArrayList<JiraCustomFieldDto>();
-		
-		for (Field field : fields) {
-			JiraCustomFieldDto dto = new JiraCustomFieldDto());
-			dto.setIssueId(111); //todo
-			dto.setName(field.getName());
-			dto.setType(field.getType());
-			//todo maybe need to convert field.getValue to a string value better than this?
-			dto.setValue(field.getValue().toString());
-			dtos.add(dto);
-		}
-		
-		return dtos;
-	}
 }

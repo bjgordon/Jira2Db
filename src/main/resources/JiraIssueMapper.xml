@@ -27,6 +27,15 @@
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 
+	<resultMap id="jiraCustomFieldMap" type="jiraCustomFieldDto">
+		<result property="id" column="id" />
+		<result property="jiraKey" column="jira_key" />
+		<result property="name" column="name" />
+		<result property="type" column="type" />
+		<result property="value" column="value" />
+	</resultMap>
+
+
 	<select id="getJiraIssueDto" parameterType="long" resultMap="JiraIssueMap">
 		select * from t_jira_issue where id = #{id}
 	</select>
@@ -54,41 +63,35 @@
 		update
 		t_jira_issue set
 		assignee = #{assignee}
-		,creation_date =
-		#{creationDate}
+		,creation_date = #{creationDate}
 		,description = #{description}
 		,jira_uri = #{jiraUri}
-		,jira_key = #{jiraKey}
+		,jira_key =	#{jiraKey}
 		,priority = #{priority}
 		,project = #{project}
-		,reporter = #{reporter}
+		,reporter =	#{reporter}
 		,status = #{status}
 		,summary = #{summary}
-		,update_date =
-		#{updateDate}
+		,update_date = #{updateDate}
 		where id = #{id}
 	</update>
-	
+
 	<update id="updateJiraIssueDtoByJiraKey" parameterType="jiraIssueDto">
 		update
 		t_jira_issue set
 		assignee = #{assignee}
-		,creation_date =
-		#{creationDate}
+		,creation_date = #{creationDate}
 		,description = #{description}
 		,jira_uri = #{jiraUri}
-		,priority =
-		#{priority}
+		,priority =	#{priority}
 		,project = #{project}
 		,reporter = #{reporter}
-		,status =
-		#{status}
-		,summary =
-		#{summary}
+		,status = #{status}
+		,summary = #{summary}
 		,update_date = #{updateDate}
-		where jira_key = #{jiraKey}
+		where
+		jira_key = #{jiraKey}
 	</update>
-
 
 	<delete id="deleteJiraIssueDto" parameterType="long">
 		delete
@@ -96,9 +99,44 @@
 	</delete>
 
 	<delete id="deleteJiraIssueDtoByJiraKey" parameterType="String">
-		delete from
+		delete
+		from
 		t_jira_issue where jira_key like #{value}
 	</delete>
 
-</mapper>
+	<insert id="createJiraCustomFieldDto" parameterType="jiraCustomFieldDto">
+		insert into
+		t_jira_custom_field
+		(id,jira_key,name,type,value)
+		values
+		(#{id},#{jiraKey},#{name},#{type},#{value})
+	</insert>
 
+	<select id="getAllJiraCustomFieldDto" parameterType="String"
+		resultMap="jiraCustomFieldMap">
+		select * from t_jira_custom_field
+	</select>
+
+	<select id="getJiraCustomFieldDtoByJiraKey" parameterType="String"
+		resultMap="jiraCustomFieldMap">
+		select * from t_jira_custom_field where jira_key =
+		#{jiraKey}
+	</select>
+
+	<update id="updateJiraCustomFieldDto" parameterType="JiraCustomFieldDto">
+		update
+		t_jira_custom_field set
+		id = #{id}
+		,jira_key =	#{jiraKey}
+		,name = #{name}
+		,type = #{type}
+		,value = #{value}
+		where jira_key = #{jiraKey} and id = #{id}
+	</update>
+
+	<delete id="deleteJiraCustomFieldDtoByJiraKey" parameterType="String">
+		delete from
+		t_jira_custom_field where jira_key like #{value}
+	</delete>
+
+</mapper>

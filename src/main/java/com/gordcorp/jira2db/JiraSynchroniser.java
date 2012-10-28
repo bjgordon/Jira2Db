@@ -28,8 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import com.atlassian.jira.rest.client.RestClientException;
 import com.gordcorp.jira2db.jira.Jira;
+import com.gordcorp.jira2db.persistence.JiraCustomFieldDao;
 import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
+import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
 
@@ -44,9 +46,16 @@ public class JiraSynchroniser {
 
 	JiraIssueDao jiraIssueDao = null;
 
+	JiraCustomFieldDao jiraCustomFieldDao = null;
+
 	public JiraSynchroniser() {
+
 		this.jiraIssueDao = new JiraIssueDao(JiraIssueDto.class,
 				SqlSessionFactorySingleton.instance());
+
+		this.jiraCustomFieldDao = new JiraCustomFieldDao(
+				JiraCustomFieldDto.class, SqlSessionFactorySingleton.instance());
+
 	}
 
 	/**
@@ -80,6 +89,9 @@ public class JiraSynchroniser {
 				+ jiraIssueDto.getJiraKey());
 		JiraIssueDto readJiraIssueDto = jiraIssueDao.getByJiraKey(jiraIssueDto
 				.getJiraKey());
+
+		// todo use transaction
+
 		if (readJiraIssueDto == null) {
 			log.info("Creating " + jiraIssueDto.getJiraKey());
 			int rows = jiraIssueDao.create(jiraIssueDto);
@@ -92,11 +104,25 @@ public class JiraSynchroniser {
 				log.info("Updated issue from Jira matches the database, so skipping update");
 			} else {
 				log.info("Updating " + jiraIssueDto.getJiraKey());
+
 				int rows = jiraIssueDao.updateByJiraKey(jiraIssueDto);
 				log.info("Update returned " + rows);
 				if (rows != 1) {
 					throw new RuntimeException("Problem updating "
 							+ jiraIssueDto);
+				}
+
+				// Custom fields - naive method = delete and then create again
+				// todo make this smarter
+				jiraCustomFieldDao
+						.deleteAllByJiraKey(jiraIssueDto.getJiraKey());
+
+				for (JiraCustomFieldDto dto : jiraIssueDto.getCustomFields()) {
+					rows = jiraCustomFieldDao.create(dto);
+					if (rows != 1) {
+						throw new RuntimeException(
+								"Problem inserting custom field " + dto);
+					}
 				}
 			}
 		}
@@ -139,7 +165,7 @@ public class JiraSynchroniser {
 	}
 
 	/**
-	 * Sync all issues from jira, regardles of when it was updated
+	 * Sync all issues from Jira, regardless of when it was updated
 	 */
 	public void syncAll() {
 		if (projectNames == null) {
