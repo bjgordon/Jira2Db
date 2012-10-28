@@ -31,7 +31,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MyBatisDao<T> implements GenericDao<T> {
+public abstract class MyBatisDao<T, PK> implements GenericDao<T, PK> {
 
 	/**
 	 * Class contains all the basic CRUD related methods which are inherited by
@@ -97,8 +97,9 @@ public abstract class MyBatisDao<T> implements GenericDao<T> {
 	 * object is called CarInfo.java, the corresponding mapper query id should
 	 * be: &lt;select id="getCarInfo" ...
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
-	public T get(int id) throws PersistenceException {
+	public T get(PK id) throws PersistenceException {
 
 		SqlSession session = sf.openSession();
 		T obj = null;
@@ -126,6 +127,7 @@ public abstract class MyBatisDao<T> implements GenericDao<T> {
 	 * might run out of memory (eg. get all UserAccounts if the table has
 	 * 1,000,000 rows) look into the aggresiveLazyLoading property
 	 * */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> getAll() throws PersistenceException {
 
@@ -176,6 +178,7 @@ public abstract class MyBatisDao<T> implements GenericDao<T> {
 	 * (fieldname1,fieldname2,...) values(value1,value2...) ...
 	 * 
 	 */
+	@Override
 	public int create(T o) throws PersistenceException {
 		SqlSession session = sf.openSession();
 		int status = -1;
@@ -200,6 +203,7 @@ public abstract class MyBatisDao<T> implements GenericDao<T> {
 	 * (example): update [tablename] set fieldname1 = value1 where id = #{id}
 	 * 
 	 */
+	@Override
 	public int update(T o) throws PersistenceException {
 		SqlSession session = sf.openSession();
 		int status = 0;
@@ -221,7 +225,8 @@ public abstract class MyBatisDao<T> implements GenericDao<T> {
 	 * update [tablename] set fieldname1 = value1 where id = #{id}
 	 * 
 	 */
-	public int delete(int id) throws PersistenceException {
+	@Override
+	public int delete(PK id) throws PersistenceException {
 		SqlSession session = sf.openSession();
 		int status = 0;
 		try {

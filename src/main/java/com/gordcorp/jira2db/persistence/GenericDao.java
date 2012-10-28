@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 
-public interface GenericDao<T> {
+public interface GenericDao<T, PK> {
 
-	public T get(int id) throws PersistenceException;
+	public T get(PK id) throws PersistenceException;
 
 	public List<T> getAll() throws PersistenceException;
 
@@ -33,6 +33,6 @@ public interface GenericDao<T> {
 
 	int update(T transientObject) throws PersistenceException;
 
-	int delete(int id) throws PersistenceException;
+	int delete(PK id) throws PersistenceException;
 
 }

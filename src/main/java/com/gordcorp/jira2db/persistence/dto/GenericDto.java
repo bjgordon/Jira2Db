@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GenericDto {
+
 	@Override
 	public boolean equals(Object obj) {
 		return super.equals(obj);
