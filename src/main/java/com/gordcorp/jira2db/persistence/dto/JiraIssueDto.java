@@ -145,7 +145,7 @@ public class JiraIssueDto extends GenericDto {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result
 				+ ((assignee == null) ? 0 : assignee.hashCode());
 		result = prime * result
@@ -173,7 +173,7 @@ public class JiraIssueDto extends GenericDto {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

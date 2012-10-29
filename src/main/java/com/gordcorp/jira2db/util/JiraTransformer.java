@@ -29,11 +29,6 @@ import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 public class JiraTransformer {
 
 	public static JiraIssueDto toJiraIssueDto(Issue issue) {
-		return toJiraIssueDto(issue, null);
-	}
-
-	public static JiraIssueDto toJiraIssueDto(Issue issue,
-			Iterable<Field> fields) {
 		JiraIssueDto dto = new JiraIssueDto();
 		if (issue.getAssignee() != null) {
 			dto.setAssignee(issue.getAssignee().getName());
@@ -74,9 +69,10 @@ public class JiraTransformer {
 
 		dto.setCustomFields(new ArrayList<JiraCustomFieldDto>());
 
-		if (fields != null) {
-			for (Field field : fields) {
+		if (issue.getFields() != null) {
+			for (Field field : issue.getFields()) {
 				JiraCustomFieldDto jiraCustomFieldDto = new JiraCustomFieldDto();
+				jiraCustomFieldDto.setJiraKey(dto.getJiraKey());
 				jiraCustomFieldDto.setId(field.getId());
 				jiraCustomFieldDto.setName(field.getName());
 				jiraCustomFieldDto.setType(field.getType());

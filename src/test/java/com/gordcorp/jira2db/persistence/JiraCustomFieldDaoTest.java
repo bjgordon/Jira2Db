@@ -85,17 +85,19 @@ public class JiraCustomFieldDaoTest {
 	public void test_create_TestIssue_Created() {
 		JiraCustomFieldDto dto = getTestJiraCustomFieldDto();
 		assertTrue(jiraCustomFieldDao.create(dto) == 1);
+
+		JiraCustomFieldDto dto2 = getTestJiraCustomFieldDto();
+		dto2.setId("id2");
+		dto2.setName("name2");
+		assertTrue(jiraCustomFieldDao.create(dto2) == 1);
+
 		List<JiraCustomFieldDto> readDtos = jiraCustomFieldDao
 				.getAllByJiraKey(dto.getJiraKey());
 
 		assertNotNull(readDtos);
-		assertEquals(1, readDtos.size());
-		JiraCustomFieldDto readDto = readDtos.get(0);
-		assertEquals(dto.getId(), readDto.getId());
-		assertEquals(dto.getJiraKey(), readDto.getJiraKey());
-		assertEquals(dto.getName(), readDto.getName());
-		assertEquals(dto.getType(), readDto.getType());
-		assertEquals(dto.getValue(), readDto.getValue());
+		assertEquals(2, readDtos.size());
+		assertEquals(dto, readDtos.get(0));
+		assertEquals(dto2, readDtos.get(1));
 	}
 
 	@Test
@@ -115,10 +117,8 @@ public class JiraCustomFieldDaoTest {
 		for (JiraCustomFieldDto readDto : readDtos) {
 			if (readDto.getId().equals(dto.getId())) {
 				found = true;
-				assertEquals(dto.getJiraKey(), readDto.getJiraKey());
-				assertEquals(dto.getName(), readDto.getName());
-				assertEquals(dto.getType(), readDto.getType());
-				assertEquals(dto.getValue(), readDto.getValue());
+				assertEquals(dto, readDto);
+
 			}
 		}
 		assertTrue(found);

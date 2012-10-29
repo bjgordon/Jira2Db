@@ -107,8 +107,8 @@ public class Jira {
 				Issue issue = restClient.getIssueClient().getIssue(
 						issueResult.getKey(), new NullProgressMonitor());
 
-				JiraIssueDto newJiraIssueDto = JiraTransformer.toJiraIssueDto(
-						issue, issue.getFields());
+				JiraIssueDto newJiraIssueDto = JiraTransformer
+						.toJiraIssueDto(issue);
 
 				result.add(newJiraIssueDto);
 			}

@@ -102,6 +102,14 @@ public class JiraSynchroniser {
 			if (rows != 1) {
 				throw new RuntimeException("Problem inserting " + jiraIssueDto);
 			}
+			for (JiraCustomFieldDto dto : jiraIssueDto.getCustomFields()) {
+				rows = jiraCustomFieldDao.create(dto);
+				if (rows != 1) {
+					throw new RuntimeException(
+							"Problem inserting custom field " + dto);
+				}
+			}
+
 		} else {
 			if (readJiraIssueDto.equals(jiraIssueDto)) {
 				log.info("Updated issue from Jira matches the database, so skipping update");

@@ -27,13 +27,13 @@ import java.util.List;
 public abstract class GenericDto {
 
 	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj);
+	public int hashCode() {
+		return 1;
 	}
 
 	@Override
-	public int hashCode() {
-		return super.hashCode();
+	public boolean equals(Object obj) {
+		return true;
 	}
 
 	@Override
