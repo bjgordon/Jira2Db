@@ -182,6 +182,10 @@ public class JiraSynchroniser {
 				if (rows != 1) {
 					throw new RuntimeException("Problem deleting " + issueInDb);
 				}
+
+				log.info("Deleting custom fields " + issueInDb.getJiraKey());
+				jiraCustomFieldDao.deleteAllByJiraKey(issueInDb.getJiraKey());
+
 			}
 		}
 	}
