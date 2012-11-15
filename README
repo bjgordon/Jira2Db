@@ -10,6 +10,19 @@ get direct read access to the Jira database, but can expose the Rest API.
 
 ---------------------------------------------
 
-Usage:
+usage: java -jar <jarfile>
+ -D <property=value>      use value for given property
+    --forever             Will continue polling Jira and syncing forever
+ -h,--help                print this message
+    --project <PROJECT>   Only sync Jira project PROJECT
+    --test-jira           Test the connection to Jira and print the
+                          results
 
-TODO
+---------------------------------------------
+                         
+Build Instructions
+
+Requires Atlassian Jira REST Java Client - https://studio.atlassian.com/wiki/display/JRJC/Home
+
+Build with Atlassian maven: 
+atlas-mvn clean package
