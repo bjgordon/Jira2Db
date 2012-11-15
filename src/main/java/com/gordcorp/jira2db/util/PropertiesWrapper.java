@@ -26,6 +26,12 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Wraps a Property object we use for singleton access to the properties file.
+ * 
+ * @author Brendan Gordon
+ * 
+ */
 public class PropertiesWrapper {
 
 	final static Logger log = LoggerFactory.getLogger(PropertiesWrapper.class);

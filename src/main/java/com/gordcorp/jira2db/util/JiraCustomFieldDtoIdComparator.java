@@ -23,13 +23,16 @@ import java.util.Comparator;
 
 import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 
-public class JiraCustomFieldDtoJiraKeyComparator implements
+/**
+ * Compare JiraCustomFieldDto objects by Id
+ */
+public class JiraCustomFieldDtoIdComparator implements
 		Comparator<JiraCustomFieldDto> {
 
 	@Override
 	public int compare(JiraCustomFieldDto arg0, JiraCustomFieldDto arg1) {
 
-		return arg0.getJiraKey().compareTo(arg1.getJiraKey());
+		return arg0.getId().compareTo(arg1.getId());
 	}
 
 }

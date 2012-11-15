@@ -26,6 +26,10 @@ import com.atlassian.jira.rest.client.domain.Issue;
 import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
 
+/**
+ * Handles transforming from Jira Rest Client objects to Dto objects used
+ * elsewhere in this program
+ */
 public class JiraTransformer {
 
 	public static JiraIssueDto toJiraIssueDto(Issue issue) {

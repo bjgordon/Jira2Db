@@ -44,9 +44,6 @@ public class App {
 
 	final static Logger log = LoggerFactory.getLogger(App.class);
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) throws Exception {
 
 		DOMConfigurator.configure("log4j.xml");
@@ -137,12 +134,17 @@ public class App {
 		}
 	}
 
-	private static void printHelp(Options options) throws Exception {
+	protected static void printHelp(Options options) throws Exception {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp("java -jar <jarfile>", options);
 	}
 
-	public static void testJira() throws Exception {
+	/**
+	 * Test connection to jira, print result to the console
+	 * 
+	 * @throws Exception
+	 */
+	protected static void testJira() {
 		String uri = PropertiesWrapper.get("jira.server.uri");
 		System.out.println("Testing connection to Jira at " + uri);
 
