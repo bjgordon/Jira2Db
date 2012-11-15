@@ -19,6 +19,7 @@
 
 package com.gordcorp.jira2db;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -45,8 +46,10 @@ public class App {
 	final static Logger log = LoggerFactory.getLogger(App.class);
 
 	public static void main(String[] args) throws Exception {
-
-		DOMConfigurator.configure("log4j.xml");
+		File log4jFile = new File("log4j.xml");
+		if (log4jFile.exists()) {
+			DOMConfigurator.configure("log4j.xml");
+		}
 
 		Option help = new Option("h", "help", false, "print this message");
 
