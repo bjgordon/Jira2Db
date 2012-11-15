@@ -115,6 +115,10 @@ public class JiraSynchroniser {
 			}
 
 		} else {
+
+			readJiraIssueDto.setCustomFields(jiraCustomFieldDao
+					.getAllByJiraKey(jiraIssueDto.getJiraKey()));
+
 			if (readJiraIssueDto.equals(jiraIssueDto)) {
 				log.info("Updated issue from Jira matches the database, so skipping update");
 			} else {
@@ -127,18 +131,9 @@ public class JiraSynchroniser {
 							+ jiraIssueDto);
 				}
 
-				// todo is sorting actually necessary?
-				Collections.sort(readJiraIssueDto.getCustomFields(),
-						new JiraCustomFieldDtoJiraKeyComparator());
-
-				Collections.sort(jiraIssueDto.getCustomFields(),
-						new JiraCustomFieldDtoJiraKeyComparator());
-
-				if (readJiraIssueDto.getCustomFields().equals(
-						jiraIssueDto.getCustomFields())) {
-					log.info("Custom fields from Jira matches the database, so skipping update");
-				} else {
-					// remove all old fields and recreate
+				if (jiraIssueDto.getCustomFields().size() != readJiraIssueDto
+						.getCustomFields().size()) {
+					log.info("Number of custom fields has changed, deleting all from DB and reinserting");
 					jiraCustomFieldDao.deleteAllByJiraKey(jiraIssueDto
 							.getJiraKey());
 					for (JiraCustomFieldDto dto : jiraIssueDto
@@ -147,6 +142,27 @@ public class JiraSynchroniser {
 						if (rows != 1) {
 							throw new RuntimeException(
 									"Problem inserting custom field " + dto);
+						}
+					}
+				} else {
+					Collections.sort(readJiraIssueDto.getCustomFields(),
+							new JiraCustomFieldDtoJiraKeyComparator());
+					Collections.sort(jiraIssueDto.getCustomFields(),
+							new JiraCustomFieldDtoJiraKeyComparator());
+
+					for (int i = 0; i < jiraIssueDto.getCustomFields().size(); i++) {
+						JiraCustomFieldDto dtoFromJira = jiraIssueDto
+								.getCustomFields().get(i);
+						JiraCustomFieldDto dtoFromDb = readJiraIssueDto
+								.getCustomFields().get(i);
+						if (!dtoFromJira.equals(dtoFromDb)) {
+							log.info("Updating field in Db: " + dtoFromJira);
+							rows = jiraCustomFieldDao.update(dtoFromJira);
+							if (rows != 1) {
+								throw new RuntimeException(
+										"Problem updating custom field "
+												+ dtoFromJira);
+							}
 						}
 					}
 				}
@@ -175,6 +191,10 @@ public class JiraSynchroniser {
 				if (rows != 1) {
 					throw new RuntimeException("Problem deleting " + issueInDb);
 				}
+
+				log.info("Deleting custom fields " + issueInDb.getJiraKey());
+				jiraCustomFieldDao.deleteAllByJiraKey(issueInDb.getJiraKey());
+
 			}
 		}
 	}
