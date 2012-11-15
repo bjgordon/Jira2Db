@@ -33,7 +33,7 @@ import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
-import com.gordcorp.jira2db.util.JiraCustomFieldDtoJiraKeyComparator;
+import com.gordcorp.jira2db.util.JiraCustomFieldDtoIdComparator;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
 
 public class JiraSynchroniser {
@@ -84,6 +84,55 @@ public class JiraSynchroniser {
 	}
 
 	/**
+	 * If this issue's Custom Fields already exists in the database, it is
+	 * updated if not equal. Otherwise they are created.
+	 * 
+	 * @param jiraCustomFieldDtos
+	 *            Dtos from Jira
+	 * @param readJiraCustomFieldDtos
+	 *            Dtos from the Database
+	 */
+	protected void updateOrCreateCustomFields(
+			List<JiraCustomFieldDto> jiraCustomFieldDtos,
+			List<JiraCustomFieldDto> readJiraCustomFieldDtos) {
+
+		if (jiraCustomFieldDtos.size() != readJiraCustomFieldDtos.size()) {
+			if (readJiraCustomFieldDtos.size() > 0) {
+				log.info("Number of custom fields has changed, deleting all from DB and reinserting");
+				jiraCustomFieldDao.deleteAllByJiraKey(jiraCustomFieldDtos
+						.get(0).getJiraKey());
+			}
+
+			for (JiraCustomFieldDto dto : jiraCustomFieldDtos) {
+				int rows = jiraCustomFieldDao.create(dto);
+				if (rows != 1) {
+					throw new RuntimeException(
+							"Problem inserting custom field " + dto);
+				}
+			}
+		} else {
+			Collections.sort(readJiraCustomFieldDtos,
+					new JiraCustomFieldDtoIdComparator());
+			Collections.sort(jiraCustomFieldDtos,
+					new JiraCustomFieldDtoIdComparator());
+
+			for (int i = 0; i < jiraCustomFieldDtos.size(); i++) {
+				JiraCustomFieldDto dtoFromJira = jiraCustomFieldDtos.get(i);
+				JiraCustomFieldDto dtoFromDb = readJiraCustomFieldDtos.get(i);
+				if (!dtoFromJira.equals(dtoFromDb)) {
+					log.info("Updating field in Db: " + dtoFromJira);
+					int rows = jiraCustomFieldDao.update(dtoFromJira);
+					if (rows != 1) {
+						throw new RuntimeException(
+								"Problem updating custom field " + dtoFromJira);
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
 	 * If this issue already exists in the database, it is updated. Otherwise it
 	 * is created.
 	 * 
@@ -131,41 +180,9 @@ public class JiraSynchroniser {
 							+ jiraIssueDto);
 				}
 
-				if (jiraIssueDto.getCustomFields().size() != readJiraIssueDto
-						.getCustomFields().size()) {
-					log.info("Number of custom fields has changed, deleting all from DB and reinserting");
-					jiraCustomFieldDao.deleteAllByJiraKey(jiraIssueDto
-							.getJiraKey());
-					for (JiraCustomFieldDto dto : jiraIssueDto
-							.getCustomFields()) {
-						rows = jiraCustomFieldDao.create(dto);
-						if (rows != 1) {
-							throw new RuntimeException(
-									"Problem inserting custom field " + dto);
-						}
-					}
-				} else {
-					Collections.sort(readJiraIssueDto.getCustomFields(),
-							new JiraCustomFieldDtoJiraKeyComparator());
-					Collections.sort(jiraIssueDto.getCustomFields(),
-							new JiraCustomFieldDtoJiraKeyComparator());
+				updateOrCreateCustomFields(jiraIssueDto.getCustomFields(),
+						readJiraIssueDto.getCustomFields());
 
-					for (int i = 0; i < jiraIssueDto.getCustomFields().size(); i++) {
-						JiraCustomFieldDto dtoFromJira = jiraIssueDto
-								.getCustomFields().get(i);
-						JiraCustomFieldDto dtoFromDb = readJiraIssueDto
-								.getCustomFields().get(i);
-						if (!dtoFromJira.equals(dtoFromDb)) {
-							log.info("Updating field in Db: " + dtoFromJira);
-							rows = jiraCustomFieldDao.update(dtoFromJira);
-							if (rows != 1) {
-								throw new RuntimeException(
-										"Problem updating custom field "
-												+ dtoFromJira);
-							}
-						}
-					}
-				}
 			}
 		}
 	}
