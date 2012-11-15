@@ -20,6 +20,7 @@
 package com.gordcorp.jira2db;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import com.gordcorp.jira2db.persistence.JiraIssueDao;
 import com.gordcorp.jira2db.persistence.SqlSessionFactorySingleton;
 import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
 import com.gordcorp.jira2db.persistence.dto.JiraIssueDto;
+import com.gordcorp.jira2db.util.JiraCustomFieldDtoJiraKeyComparator;
 import com.gordcorp.jira2db.util.PropertiesWrapper;
 
 public class JiraSynchroniser {
@@ -92,6 +94,8 @@ public class JiraSynchroniser {
 				+ jiraIssueDto.getJiraKey());
 		JiraIssueDto readJiraIssueDto = jiraIssueDao.getByJiraKey(jiraIssueDto
 				.getJiraKey());
+		readJiraIssueDto.setCustomFields(jiraCustomFieldDao
+				.getAllByJiraKey(jiraIssueDto.getJiraKey()));
 
 		// todo use transaction
 
@@ -123,16 +127,27 @@ public class JiraSynchroniser {
 							+ jiraIssueDto);
 				}
 
-				// Custom fields - naive method = delete and then create again
-				// todo make this smarter
-				jiraCustomFieldDao
-						.deleteAllByJiraKey(jiraIssueDto.getJiraKey());
+				// todo is sorting actually necessary?
+				Collections.sort(readJiraIssueDto.getCustomFields(),
+						new JiraCustomFieldDtoJiraKeyComparator());
 
-				for (JiraCustomFieldDto dto : jiraIssueDto.getCustomFields()) {
-					rows = jiraCustomFieldDao.create(dto);
-					if (rows != 1) {
-						throw new RuntimeException(
-								"Problem inserting custom field " + dto);
+				Collections.sort(jiraIssueDto.getCustomFields(),
+						new JiraCustomFieldDtoJiraKeyComparator());
+
+				if (readJiraIssueDto.getCustomFields().equals(
+						jiraIssueDto.getCustomFields())) {
+					log.info("Custom fields from Jira matches the database, so skipping update");
+				} else {
+					// remove all old fields and recreate
+					jiraCustomFieldDao.deleteAllByJiraKey(jiraIssueDto
+							.getJiraKey());
+					for (JiraCustomFieldDto dto : jiraIssueDto
+							.getCustomFields()) {
+						rows = jiraCustomFieldDao.create(dto);
+						if (rows != 1) {
+							throw new RuntimeException(
+									"Problem inserting custom field " + dto);
+						}
 					}
 				}
 			}
