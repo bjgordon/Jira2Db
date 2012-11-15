@@ -21,6 +21,7 @@ package com.gordcorp.jira2db.persistence;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
@@ -28,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.gordcorp.jira2db.persistence.dto.JiraCustomFieldDto;
+import com.gordcorp.jira2db.util.JiraCustomFieldDtoIdComparator;
 
 public class JiraCustomFieldDaoTest {
 	static JiraCustomFieldDao jiraCustomFieldDao = null;
@@ -82,18 +84,19 @@ public class JiraCustomFieldDaoTest {
 	}
 
 	@Test
-	public void test_create_TestIssue_Created() {
+	public void test_create_TestJiraCustomFieldDto_Created() {
 		JiraCustomFieldDto dto = getTestJiraCustomFieldDto();
 		assertTrue(jiraCustomFieldDao.create(dto) == 1);
 
 		JiraCustomFieldDto dto2 = getTestJiraCustomFieldDto();
-		dto2.setId("id2");
+		dto2.setId(dto.getId() + "2");
 		dto2.setName("name2");
 		assertTrue(jiraCustomFieldDao.create(dto2) == 1);
 
 		List<JiraCustomFieldDto> readDtos = jiraCustomFieldDao
 				.getAllByJiraKey(dto.getJiraKey());
 
+		Collections.sort(readDtos, new JiraCustomFieldDtoIdComparator());
 		assertNotNull(readDtos);
 		assertEquals(2, readDtos.size());
 		assertEquals(dto, readDtos.get(0));
@@ -101,7 +104,7 @@ public class JiraCustomFieldDaoTest {
 	}
 
 	@Test
-	public void test_update_TestIssue_IsUpdated() {
+	public void test_update_TestJiraCustomFieldDto_IsUpdated() {
 		JiraCustomFieldDto dto = getTestJiraCustomFieldDto();
 		assertTrue(jiraCustomFieldDao.create(dto) == 1);
 
