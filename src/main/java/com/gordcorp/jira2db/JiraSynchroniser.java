@@ -216,6 +216,9 @@ public class JiraSynchroniser {
 		}
 	}
 
+	/**
+	 * Sync deletions for all currently selected projects
+	 */
 	protected void syncDeletions() {
 		log.info("Syncing deletions for projects " + projectNames);
 		for (String projectName : projectNames) {
