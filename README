@@ -10,6 +10,11 @@ get direct read access to the Jira database, but can expose the Rest API.
 
 ---------------------------------------------
 
+Running Instructions:
+
+Rename example-config.properties to config.properties, change 
+to suit your environment. Must be in the current directory.
+
 usage: java -jar <jarfile>
  -D <property=value>      use value for given property
     --forever             Will continue polling Jira and syncing forever
@@ -19,10 +24,11 @@ usage: java -jar <jarfile>
                           results
 
 ---------------------------------------------
-                         
 Build Instructions
 
 Requires Atlassian Jira REST Java Client - https://studio.atlassian.com/wiki/display/JRJC/Home
 
 Build with Atlassian maven: 
 atlas-mvn clean package
+
+
