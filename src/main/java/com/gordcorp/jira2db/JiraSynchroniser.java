@@ -143,8 +143,10 @@ public class JiraSynchroniser {
 				+ jiraIssueDto.getJiraKey());
 		JiraIssueDto readJiraIssueDto = jiraIssueDao.getByJiraKey(jiraIssueDto
 				.getJiraKey());
-		readJiraIssueDto.setCustomFields(jiraCustomFieldDao
-				.getAllByJiraKey(jiraIssueDto.getJiraKey()));
+		if (readJiraIssueDto != null) {
+			readJiraIssueDto.setCustomFields(jiraCustomFieldDao
+					.getAllByJiraKey(jiraIssueDto.getJiraKey()));
+		}
 
 		// todo use transaction
 
