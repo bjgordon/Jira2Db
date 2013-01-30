@@ -5,7 +5,7 @@ Jira 2 Db
 Pulls data from a Jira instance using the Rest API, and saves it to another 
 database.
 Allows the access of Jira data in a known stable format. Useful for if you're 
-not comfortable relying reading Jira's database directly, or you are unable to 
+not comfortable relying on reading Jira's database directly, or you are unable to 
 get direct read access to the Jira database, but can expose the Rest API.
 
 ---------------------------------------------
